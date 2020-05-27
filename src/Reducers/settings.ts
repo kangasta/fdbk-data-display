@@ -7,7 +7,7 @@ const initialState: SettingsState = {
 };
 
 interface SetDarkModeAction {
-  type: "SET_DARK_MODE";
+  type: 'SET_DARK_MODE';
   darkMode: boolean;
 }
 
@@ -16,7 +16,7 @@ export const settingsReducer = (
   action: SetDarkModeAction
 ): SettingsState => {
   switch (action.type) {
-    case "SET_DARK_MODE":
+    case 'SET_DARK_MODE':
       return { ...state, darkMode: action.darkMode };
     default:
       return state;

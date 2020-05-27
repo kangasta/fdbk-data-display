@@ -1,6 +1,6 @@
-import React from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
 import {
   Toolbar,
@@ -11,10 +11,10 @@ import {
   Typography,
   IconButton,
   Container,
-} from "@material-ui/core";
-import { BrightnessHigh, BrightnessLow } from "@material-ui/icons";
+} from '@material-ui/core';
+import { BrightnessHigh, BrightnessLow } from '@material-ui/icons';
 
-import { StateType } from "../Reducers/main";
+import { StateType } from '../Reducers/main';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       backgroundColor:
-        theme.palette.type == "dark"
-          ? theme.palette.grey["800"]
+        theme.palette.type == 'dark'
+          ? theme.palette.grey['800']
           : theme.palette.primary.main,
     },
   })
@@ -65,7 +65,7 @@ const mapStateToProps = (state: StateType) => ({
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: "SET_DARK_MODE", darkMode }),
+    dispatch({ type: 'SET_DARK_MODE', darkMode }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { Chart } from "re-chartjs-wrapper";
-import { ChartOptions, ChartScales, ChartType, ChartData } from "chart.js";
-import "chartjs-plugin-colorschemes";
+import { Chart } from 're-chartjs-wrapper';
+import { ChartOptions, ChartScales, ChartType, ChartData } from 'chart.js';
+import 'chartjs-plugin-colorschemes';
 
 import {
   Typography,
@@ -10,7 +10,7 @@ import {
   useTheme,
   makeStyles,
   createStyles,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(3),
     },
     container: {
-      position: "relative",
+      position: 'relative',
       marginBottom: theme.spacing(6),
     },
   })
@@ -39,7 +39,7 @@ const getCommonChartOptions = (theme: Theme): ChartOptions => ({
     },
   },
   legend: {
-    position: "bottom",
+    position: 'bottom',
     labels: {
       fontColor: theme.palette.text.secondary,
     },
@@ -60,7 +60,7 @@ const getGridStyling = (theme: Theme): ChartScales => ({
 });
 
 const getAveragedLabel = (tooltipItem: any, data: any) => {
-  const label = data.datasets[tooltipItem.datasetIndex].label || "";
+  const label = data.datasets[tooltipItem.datasetIndex].label || '';
   const value = Math.round(tooltipItem.yLabel * 100) / 100;
   return ` ${label}: ${value}`;
 };
@@ -69,7 +69,7 @@ const getLineChartOptions = (theme: Theme): ChartOptions => ({
   scales: {
     xAxes: [
       {
-        type: "time",
+        type: 'time',
         ...getGridStyling(theme),
       },
     ],
@@ -83,13 +83,13 @@ const getLineChartOptions = (theme: Theme): ChartOptions => ({
     callbacks: {
       label: getAveragedLabel,
     },
-    multiKeyBackground: "transparent",
+    multiKeyBackground: 'transparent',
   },
 });
 
 const getChartOptions = (type: ChartType, theme: Theme): ChartOptions => {
   switch (type) {
-    case "line":
+    case 'line':
       return {
         ...getCommonChartOptions(theme),
         ...getLineChartOptions(theme),

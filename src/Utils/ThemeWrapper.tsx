@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
+import React, { useEffect } from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
 import {
   ThemeProvider,
   createMuiTheme,
   CssBaseline,
   useMediaQuery,
-} from "@material-ui/core";
-import { deepPurple, deepOrange } from "@material-ui/core/colors";
+} from '@material-ui/core';
+import { deepPurple, deepOrange } from '@material-ui/core/colors';
 
-import { StateType } from "../Reducers/main";
-import MetaThemeColor from "./MetaThemeColor";
+import { StateType } from '../Reducers/main';
+import MetaThemeColor from './MetaThemeColor';
 
 const darkTheme = createMuiTheme({
   palette: {
     primary: deepPurple,
     secondary: deepOrange,
-    type: "dark",
+    type: 'dark',
   },
 });
 
@@ -39,7 +39,7 @@ export const ThemeWrapper = ({
   setDarkMode,
   children,
 }: ThemeWrapperProps): React.ReactElement => {
-  const initialDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const initialDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   useEffect(() => {
     setDarkMode(initialDarkMode);
@@ -59,7 +59,7 @@ const mapStateToProps = (state: StateType) => ({
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: "SET_DARK_MODE", darkMode }),
+    dispatch({ type: 'SET_DARK_MODE', darkMode }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThemeWrapper);

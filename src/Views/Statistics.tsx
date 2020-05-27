@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import ChartContainer, { getChartKey } from "../Components/ChartContainer";
+import ChartContainer, { getChartKey } from '../Components/ChartContainer';
 import {
   Paper,
   makeStyles,
@@ -9,9 +9,9 @@ import {
   Backdrop,
   CircularProgress,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-const STATISTICS_URL = "http://localhost:8080/overview?limit=48";
+const STATISTICS_URL = 'http://localhost:8080/overview?limit=48';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +35,7 @@ export interface StatusType {
 export const Statistics = (): React.ReactElement => {
   const [statistics, setStatistics] = useState<StatisticsType>([]);
   const [status, setStatus] = useState<StatusType>({
-    loading: "Loading statistics",
+    loading: 'Loading statistics',
   });
 
   const classes = useStyles();
@@ -48,7 +48,7 @@ export const Statistics = (): React.ReactElement => {
         setStatistics(data.statistics);
         setStatus({});
       } catch (_) {
-        setStatus({ error: "Was not able to fetch data from the server." });
+        setStatus({ error: 'Was not able to fetch data from the server.' });
       }
     };
     fetchData();
@@ -74,7 +74,7 @@ export const Statistics = (): React.ReactElement => {
   }
 
   const charts = statistics
-    .filter((i) => i.type === "chart")
+    .filter((i) => i.type === 'chart')
     .map((i) => <ChartContainer key={getChartKey(i.payload)} {...i.payload} />);
 
   return <Paper className={classes.statistics}>{charts}</Paper>;
