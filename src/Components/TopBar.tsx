@@ -51,7 +51,12 @@ export const TopBar = ({ darkMode, setDarkMode }: TopBarProps) => {
           >
             fdbk-data-display
           </Typography>
-          <IconButton onClick={toggleDarkMode} color="inherit" edge="end">
+          <IconButton
+            onClick={toggleDarkMode}
+            color="inherit"
+            edge="end"
+            data-testid="darkmode-toggle-button"
+          >
             {darkMode ? <BrightnessHigh /> : <BrightnessLow />}
           </IconButton>
         </Toolbar>
