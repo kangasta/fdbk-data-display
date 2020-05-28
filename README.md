@@ -1,5 +1,9 @@
 # fdbk-data-display
 
+[![Build Status](https://travis-ci.org/kangasta/fdbk-data-display.svg?branch=master)](https://travis-ci.org/kangasta/fdbk-data-display)
+[![Maintainability](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/maintainability)](https://codeclimate.com/github/kangasta/fdbk-data-display/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/test_coverage)](https://codeclimate.com/github/kangasta/fdbk-data-display/test_coverage)
+
 Demo project for a blog post.
 
 ## Development
