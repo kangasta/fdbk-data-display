@@ -10,8 +10,8 @@ To get development server running on your machine, run:
 
 ```bash
 # Install dependencies and start dev server
-npm install;
-npm start;
+npm install
+npm start
 ```
 
 ### Before committing
@@ -35,5 +35,5 @@ npm test -- --coverage
 To create production build:
 
 ```bash
-npm run build;
+npm run build
 ```
