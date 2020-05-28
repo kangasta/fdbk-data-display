@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { Chart } from 're-chartjs-wrapper';
-import { ChartOptions, ChartScales, ChartType, ChartData } from 'chart.js';
+import {
+  ChartOptions,
+  ChartScales,
+  ChartType,
+  ChartData,
+  ChartTooltipItem,
+} from 'chart.js';
 import 'chartjs-plugin-colorschemes';
 
 import {
@@ -45,6 +51,12 @@ const getCommonChartOptions = (theme: Theme): ChartOptions => ({
     },
   },
   aspectRatio: 2.75,
+  tooltips: {
+    callbacks: {
+      label: getRoundedLabel,
+    },
+    multiKeyBackground: 'transparent',
+  },
 });
 
 const getGridStyling = (theme: Theme): ChartScales => ({
@@ -59,10 +71,12 @@ const getGridStyling = (theme: Theme): ChartScales => ({
   },
 });
 
-const getAveragedLabel = (tooltipItem: any, data: any) => {
-  const label = data.datasets[tooltipItem.datasetIndex].label || '';
-  const value = Math.round(tooltipItem.yLabel * 100) / 100;
-  return ` ${label}: ${value}`;
+const getRoundedLabel = (tooltipItem: ChartTooltipItem, data: ChartData) => {
+  const datasetIndex =
+    tooltipItem.datasetIndex === undefined ? -1 : tooltipItem.datasetIndex;
+  const label = data.datasets?.[datasetIndex]?.label || '';
+  const value = Math.round((Number(tooltipItem.yLabel) || 0) * 100) / 100;
+  return ` ${label}${label ? ': ' : ''}${value}`;
 };
 
 const getLineChartOptions = (theme: Theme): ChartOptions => ({
@@ -79,15 +93,12 @@ const getLineChartOptions = (theme: Theme): ChartOptions => ({
       },
     ],
   },
-  tooltips: {
-    callbacks: {
-      label: getAveragedLabel,
-    },
-    multiKeyBackground: 'transparent',
-  },
 });
 
-const getChartOptions = (type: ChartType, theme: Theme): ChartOptions => {
+export const getChartOptions = (
+  type: ChartType,
+  theme: Theme
+): ChartOptions => {
   switch (type) {
     case 'line':
       return {
@@ -126,7 +137,7 @@ export const ChartContainer = ({ field, type, data }: ChartContainerProps) => {
         {capitalize(field)}
       </Typography>
       <Chart
-        key={`${field}-${type}`}
+        key={getChartKey({ field, type })}
         data={data}
         type={type}
         options={getChartOptions(type, theme)}
