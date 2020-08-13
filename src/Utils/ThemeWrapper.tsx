@@ -59,7 +59,7 @@ const mapStateToProps = (state: StateType) => ({
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: 'SET_DARK_MODE', darkMode }),
+    dispatch({ type: 'UPDATE_SETTINGS', settings: { darkMode } }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThemeWrapper);

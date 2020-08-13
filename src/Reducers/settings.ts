@@ -1,23 +1,36 @@
-interface SettingsState {
+export interface SettingsState {
+  apiUrl?: string;
+  authUrl?: string;
+  clientId?: string;
   darkMode: boolean;
 }
 
-const initialState: SettingsState = {
+const defaultConfig: SettingsState = {
   darkMode: false,
 };
 
-interface SetDarkModeAction {
-  type: 'SET_DARK_MODE';
-  darkMode: boolean;
+let initialState: SettingsState;
+try {
+  // config is defined in config.js, which is loaded in index.html
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  initialState = config;
+} catch (_) {
+  initialState = defaultConfig;
+}
+
+interface UpdateSettingsAction {
+  type: 'UPDATE_SETTINGS';
+  settings: Partial<SettingsState>;
 }
 
 export const settingsReducer = (
   state = initialState,
-  action: SetDarkModeAction
+  action: UpdateSettingsAction
 ): SettingsState => {
   switch (action.type) {
-    case 'SET_DARK_MODE':
-      return { ...state, darkMode: action.darkMode };
+    case 'UPDATE_SETTINGS':
+      return { ...state, ...action.settings };
     default:
       return state;
   }

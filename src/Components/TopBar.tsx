@@ -15,6 +15,7 @@ import {
 import { BrightnessHigh, BrightnessLow } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
+import AccountContainer from './AccountContainer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,10 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface TopBarProps {
   darkMode: boolean;
+  hasAuthentication: boolean;
   setDarkMode: (darkMode: boolean) => void;
 }
 
-export const TopBar = ({ darkMode, setDarkMode }: TopBarProps) => {
+export const TopBar = ({
+  darkMode,
+  hasAuthentication,
+  setDarkMode,
+}: TopBarProps) => {
   const classes = useStyles();
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
@@ -54,11 +60,12 @@ export const TopBar = ({ darkMode, setDarkMode }: TopBarProps) => {
           <IconButton
             onClick={toggleDarkMode}
             color="inherit"
-            edge="end"
+            edge={hasAuthentication ? false : 'end'}
             data-testid="darkmode-toggle-button"
           >
             {darkMode ? <BrightnessHigh /> : <BrightnessLow />}
           </IconButton>
+          <AccountContainer />
         </Toolbar>
       </Container>
     </AppBar>
@@ -67,10 +74,11 @@ export const TopBar = ({ darkMode, setDarkMode }: TopBarProps) => {
 
 const mapStateToProps = (state: StateType) => ({
   darkMode: state.settings.darkMode,
+  hasAuthentication: Boolean(state.settings.authUrl && state.settings.clientId),
 });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: 'SET_DARK_MODE', darkMode }),
+    dispatch({ type: 'UPDATE_SETTINGS', settings: { darkMode } }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);
