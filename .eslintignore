@@ -2,4 +2,5 @@ dist/
 coverage/
 node_modules/
 
+config.js
 jest.config.js

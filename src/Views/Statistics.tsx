@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const STATISTICS_URL = 'http://localhost:8080/overview?limit=48';
+const STATISTICS_URL = 'http://localhost:8080/overview?limit=96';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
