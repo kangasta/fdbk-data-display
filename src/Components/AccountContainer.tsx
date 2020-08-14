@@ -2,13 +2,7 @@ import React, { useEffect } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import {
-  Typography,
-  Link,
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core';
+import { Typography, makeStyles, createStyles, Theme } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 
 import jwt_decode from 'jwt-decode';
