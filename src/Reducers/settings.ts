@@ -3,10 +3,12 @@ export interface SettingsState {
   authUrl?: string;
   clientId?: string;
   darkMode: boolean;
+  title: string;
 }
 
 const defaultConfig: SettingsState = {
   darkMode: false,
+  title: 'fdbk-data-display',
 };
 
 let initialState: SettingsState;
@@ -14,7 +16,7 @@ try {
   // config is defined in config.js, which is loaded in index.html
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  initialState = config;
+  initialState = { ...defaultConfig, ...config };
 } catch (_) {
   initialState = defaultConfig;
 }
