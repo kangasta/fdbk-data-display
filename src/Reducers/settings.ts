@@ -1,3 +1,5 @@
+export const SETTINGS_KEY = 'settings';
+
 export interface SettingsState {
   apiUrl?: string;
   authUrl?: string;
@@ -11,14 +13,19 @@ const defaultConfig: SettingsState = {
   title: 'fdbk-data-display',
 };
 
+const savedConfigString = window.localStorage.getItem(SETTINGS_KEY);
+const savedConfig: SettingsState = savedConfigString
+  ? JSON.parse(savedConfigString)
+  : {};
+
 let initialState: SettingsState;
 try {
   // config is defined in config.js, which is loaded in index.html
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  initialState = { ...defaultConfig, ...config };
+  initialState = { ...defaultConfig, ...config, ...savedConfig };
 } catch (_) {
-  initialState = defaultConfig;
+  initialState = { ...defaultConfig, ...savedConfig };
 }
 
 interface UpdateSettingsAction {
