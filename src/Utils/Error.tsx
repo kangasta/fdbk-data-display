@@ -1,11 +1,7 @@
 import React from 'react';
-import {
-  Paper,
-  makeStyles,
-  Theme,
-  createStyles,
-  Typography,
-} from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Typography } from '@material-ui/core';
+
+import { Page } from './Page';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,11 +28,11 @@ export const Error = ({
   const classes = useStyles();
 
   return (
-    <Paper className={classes.error}>
+    <Page>
       <Typography className={classes.errorTitle} variant="h5" component="h2">
         {title}
       </Typography>
       <p>{children}</p>
-    </Paper>
+    </Page>
   );
 };

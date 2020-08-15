@@ -2,31 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
-import {
-  Paper,
-  makeStyles,
-  Theme,
-  createStyles,
-  Backdrop,
-  CircularProgress,
-} from '@material-ui/core';
+import { Backdrop, CircularProgress } from '@material-ui/core';
 
 import { StateType } from '../Reducers/main';
 import { Error } from '../Utils/Error';
+import { Page } from '../Utils/Page';
 
 const LOADING_STATUS = {
   loading: 'Loading statistics',
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    statistics: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
-  })
-);
 
 export type StatisticsType = any[];
 export interface StatusType {
@@ -47,8 +31,6 @@ export const Statistics = ({
 }: StatisticsProps): React.ReactElement => {
   const [statistics, setStatistics] = useState<StatisticsType>([]);
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
-
-  const classes = useStyles();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,7 +77,7 @@ export const Statistics = ({
     .filter((i) => i.type === 'chart')
     .map((i) => <ChartContainer key={getChartKey(i.payload)} {...i.payload} />);
 
-  return <Paper className={classes.statistics}>{charts}</Paper>;
+  return <Page>{charts}</Page>;
 };
 
 const mapStateToProps = (state: StateType) => ({
