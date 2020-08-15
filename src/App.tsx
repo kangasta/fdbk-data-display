@@ -10,7 +10,7 @@ import TopBar from './Components/TopBar';
 import mainReducer from './Reducers/main';
 import ThemeWrapper from './Utils/ThemeWrapper';
 import Login from './Views/Login';
-import { Settings } from './Views/Settings';
+import Settings from './Views/Settings';
 import Statistics from './Views/Statistics';
 
 const store = createStore(mainReducer);

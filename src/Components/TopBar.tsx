@@ -67,6 +67,7 @@ export const TopBar = ({
   }`;
 
   const settingsLinkTarget = isSettingsActive ? '/' : '/settings';
+  const settingsLinkView = isSettingsActive ? 'home' : 'settings';
   const settingsLinkIcon = isSettingsActive ? <Home /> : <Settings />;
 
   return (
@@ -91,7 +92,7 @@ export const TopBar = ({
               <GitHub />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Open settings">
+          <Tooltip title={`Open ${settingsLinkView}`}>
             <IconButton
               color="inherit"
               onClick={() => history.push(settingsLinkTarget)}
