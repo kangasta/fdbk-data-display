@@ -7,9 +7,15 @@ export interface LinkProps {
   clientId: string;
 }
 
+const removeTrailingSlash = (url?: string): string => {
+  if (!url) return '';
+  return url?.endsWith('/') ? url.slice(0, -1) : url;
+};
+
 export const getCurrentUrl = (): string => {
   const url = window.location.href.match(/https{0,1}:\/\/[^/#?]+/);
-  return url ? `${url[0]}${process.env.PUBLIC_URL}` : '';
+  const postfix = removeTrailingSlash(process.env.PUBLIC_URL);
+  return url ? `${url[0]}${postfix}` : '';
 };
 
 export const getLoginUrl = (authUrl: string, clientId: string): string =>
