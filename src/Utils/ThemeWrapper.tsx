@@ -43,7 +43,7 @@ export const ThemeWrapper = ({
 
   useEffect(() => {
     setDarkMode(initialDarkMode);
-  }, []);
+  }, [initialDarkMode, setDarkMode]);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>

@@ -127,7 +127,11 @@ export interface ChartContainerProps {
   data: ChartData;
 }
 
-export const ChartContainer = ({ field, type, data }: ChartContainerProps) => {
+export const ChartContainer = ({
+  field,
+  type,
+  data,
+}: ChartContainerProps): React.ReactElement => {
   const theme = useTheme();
   const classes = useStyles();
 

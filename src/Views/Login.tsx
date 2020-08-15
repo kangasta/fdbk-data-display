@@ -12,7 +12,6 @@ const LOADING_STATUS = {
   loading: 'Logging in',
 };
 
-export type LoginType = any[];
 export interface StatusType {
   error?: string;
   loading?: string;

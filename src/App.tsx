@@ -15,7 +15,7 @@ import Statistics from './Views/Statistics';
 
 const store = createStore(mainReducer);
 
-export const App = () => {
+export const App = (): React.ReactElement => {
   return (
     <Provider store={store}>
       <ThemeWrapper>
