@@ -39,5 +39,10 @@ npm test -- --coverage
 To create production build:
 
 ```bash
+# Build
 npm run build
+
+# Build with non-root public URL
+echo 'PUBLIC_URL="/${path}/#/"' > .env
+npm run build -- --public-url /${path}/
 ```
