@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 
 import {
   Toolbar,
@@ -13,7 +14,7 @@ import {
   Container,
   Tooltip,
 } from '@material-ui/core';
-import { InvertColors, Settings, GitHub } from '@material-ui/icons';
+import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import AccountContainer from './AccountContainer';
@@ -52,6 +53,8 @@ export const TopBar = ({
   setDarkMode,
 }: TopBarProps) => {
   const classes = useStyles();
+  const history = useHistory();
+  const isSettingsActive = useRouteMatch('/settings');
 
   useEffect(() => {
     window.document.title = title;
@@ -62,6 +65,9 @@ export const TopBar = ({
   const invertColorsClasses = `${darkMode ? classes.darkMode : ''} ${
     classes.invertColorsIcon
   }`;
+
+  const settingsLinkTarget = isSettingsActive ? '/' : '/settings';
+  const settingsLinkIcon = isSettingsActive ? <Home /> : <Settings />;
 
   return (
     <AppBar className={classes.appBar} position="static">
@@ -85,13 +91,14 @@ export const TopBar = ({
               <GitHub />
             </IconButton>
           </Tooltip>
-          {/* <Tooltip title="Open settings">
+          <Tooltip title="Open settings">
             <IconButton
               color="inherit"
+              onClick={() => history.push(settingsLinkTarget)}
             >
-              <Settings />
+              {settingsLinkIcon}
             </IconButton>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip title="Toggle dark mode">
             <IconButton
               className={invertColorsClasses}
