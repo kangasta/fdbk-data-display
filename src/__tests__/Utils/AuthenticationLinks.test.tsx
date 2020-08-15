@@ -10,13 +10,13 @@ import {
 } from '../../Utils/AuthenticationLinks';
 
 describe('getCurrentUrl', (): void => {
-  it('returns current url with env PUBLIC_URL', (): void => {
+  it('returns current url with env PUBLIC_URL without trailing "/"', (): void => {
     window.history.replaceState(null, 'title', 'http://localhost/path');
 
     process.env.PUBLIC_URL = '/';
-    expect(getCurrentUrl()).toEqual('http://localhost/');
+    expect(getCurrentUrl()).toEqual('http://localhost');
 
-    process.env.PUBLIC_URL = '/test_public';
+    process.env.PUBLIC_URL = '/test_public/';
     expect(getCurrentUrl()).toEqual('http://localhost/test_public');
   });
 });
