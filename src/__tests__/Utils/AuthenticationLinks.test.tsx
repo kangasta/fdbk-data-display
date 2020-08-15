@@ -21,40 +21,22 @@ describe('getCurrentUrl', (): void => {
   });
 });
 
-describe('getLoginUrl', (): void => {
-  it('returns login url', (): void => {
-    expect(getLoginUrl('auth_url', 'test_id')).toContain('auth_url/login');
+describe('LogIn and LogOut', (): void => {
+  it.each([
+    ['getLoginUrl', '/login', getLoginUrl],
+    ['getLogoutUrl', '/logout', getLogoutUrl],
+  ])('%s contains %s', (_, path, fn): void => {
+    expect(fn('auth_url', 'test_id')).toContain(`auth_url${path}`);
   });
-});
-
-describe('getLogoutUrl', (): void => {
-  it('returns logout url', (): void => {
-    expect(getLogoutUrl('auth_url', 'test_id')).toContain('auth_url/logout');
-  });
-});
-
-describe('LogIn', (): void => {
-  it('provides link to login url', (): void => {
-    const { queryByText } = render(
-      <LogIn authUrl="http://auth" clientId="id" />
-    );
-    expect(queryByText('Log in')).toBeInTheDocument();
-    expect(queryByText('Log in')).toHaveProperty(
+  it.each([
+    ['LogIn', 'Log in', LogIn, getLoginUrl],
+    ['LogOut', 'log out', LogOut, getLogoutUrl],
+  ])('%s has correct link with %s text', (_, text, CUT, helper): void => {
+    const { queryByText } = render(<CUT authUrl="http://auth" clientId="id" />);
+    expect(queryByText(text)).toBeInTheDocument();
+    expect(queryByText(text)).toHaveProperty(
       'href',
-      getLoginUrl('http://auth', 'id')
-    );
-  });
-});
-
-describe('LogOut', (): void => {
-  it('provides link to logout url', (): void => {
-    const { queryByText } = render(
-      <LogOut authUrl="http://auth" clientId="id" />
-    );
-    expect(queryByText('log out')).toBeInTheDocument();
-    expect(queryByText('log out')).toHaveProperty(
-      'href',
-      getLogoutUrl('http://auth', 'id')
+      helper('http://auth', 'id')
     );
   });
 });

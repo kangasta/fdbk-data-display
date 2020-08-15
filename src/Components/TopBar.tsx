@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import {
 import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
+import { setDarkMode } from '../Utils/actionCreators';
 import AccountContainer from './AccountContainer';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -123,9 +124,7 @@ const mapStateToProps = (state: StateType) => ({
   hasAuthentication: Boolean(state.settings.authUrl && state.settings.clientId),
   title: state.settings.title,
 });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: 'UPDATE_SETTINGS', settings: { darkMode } }),
-});
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ setDarkMode }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);
