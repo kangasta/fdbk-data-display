@@ -27,7 +27,7 @@ export const AccountContainer = ({
   authUrl,
   clientId,
   idToken,
-}: AccountContainerProps) => {
+}: AccountContainerProps): React.ReactElement | null => {
   const classes = useStyles();
 
   if (!(clientId && authUrl)) return null;

@@ -114,7 +114,7 @@ export const Settings = ({
       .split('&')
       .map((keyValue: string): string[] => keyValue.split('='))
       .filter(([key]: string[]): boolean => keys.includes(key))
-      .reduce((authObj: any, [key, value]: string[]) => {
+      .reduce((authObj: { [key: string]: string }, [key, value]: string[]) => {
         authObj[key] = decodeURI(value);
         return authObj;
       }, {});
