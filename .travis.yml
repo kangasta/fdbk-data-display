@@ -8,6 +8,15 @@ addons:
 script:
 - npm run lint
 - npm test -- --coverage --verbose
+- npm run build -- --public-url https://kangasta.github.io/fdbk-data-display
 after_script:
 - npm install -g codeclimate-test-reporter
 - codeclimate-test-reporter < coverage/lcov.info
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: master
