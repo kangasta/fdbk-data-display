@@ -1,8 +1,8 @@
 export interface AuthenticationState {
   id_token: string;
   access_token: string;
-  expires_in: string;
-  token_type: boolean;
+  expires_in: number;
+  token_type: string;
 }
 
 interface UpdateAuthenticationAction {

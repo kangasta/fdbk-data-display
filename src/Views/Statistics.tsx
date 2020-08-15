@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
 import {
@@ -8,10 +9,14 @@ import {
   createStyles,
   Backdrop,
   CircularProgress,
-  Typography,
 } from '@material-ui/core';
 
-const STATISTICS_URL = 'http://localhost:8080/overview?limit=96';
+import { StateType } from '../Reducers/main';
+import { Error } from '../Utils/Error';
+
+const LOADING_STATUS = {
+  loading: 'Loading statistics',
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
-    },
-    errorTitle: {
-      color: theme.palette.error.dark,
     },
   })
 );
@@ -32,18 +34,41 @@ export interface StatusType {
   loading?: string;
 }
 
-export const Statistics = (): React.ReactElement => {
+export interface StatisticsProps {
+  apiUrl?: string;
+  idToken?: string;
+  tokenType?: string;
+}
+
+export const Statistics = ({
+  apiUrl,
+  idToken,
+  tokenType,
+}: StatisticsProps): React.ReactElement => {
   const [statistics, setStatistics] = useState<StatisticsType>([]);
-  const [status, setStatus] = useState<StatusType>({
-    loading: 'Loading statistics',
-  });
+  const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
 
   const classes = useStyles();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!apiUrl) {
+        setStatus({ error: 'API not configured. Can not load data.' });
+        return;
+      }
+
       try {
-        const response = await fetch(STATISTICS_URL);
+        const headers =
+          tokenType && idToken
+            ? {
+                Authorization: `${tokenType} ${idToken}`,
+              }
+            : undefined;
+
+        const response = await fetch(apiUrl, {
+          headers,
+          mode: 'cors',
+        });
         const data = await response.json();
         setStatistics(data.statistics);
         setStatus({});
@@ -52,7 +77,7 @@ export const Statistics = (): React.ReactElement => {
       }
     };
     fetchData();
-  }, []);
+  }, [apiUrl, tokenType, idToken]);
 
   if (status?.loading) {
     return (
@@ -63,14 +88,7 @@ export const Statistics = (): React.ReactElement => {
   }
 
   if (status?.error) {
-    return (
-      <Paper className={classes.statistics}>
-        <Typography className={classes.errorTitle} variant="h5" component="h2">
-          Error
-        </Typography>
-        <p>{status.error}</p>
-      </Paper>
-    );
+    return <Error>{status.error}</Error>;
   }
 
   const charts = statistics
@@ -79,3 +97,11 @@ export const Statistics = (): React.ReactElement => {
 
   return <Paper className={classes.statistics}>{charts}</Paper>;
 };
+
+const mapStateToProps = (state: StateType) => ({
+  apiUrl: state.settings.apiUrl,
+  idToken: state.authentication?.id_token,
+  tokenType: state.authentication?.token_type,
+});
+
+export default connect(mapStateToProps)(Statistics);
