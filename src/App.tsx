@@ -19,7 +19,7 @@ export const App = () => {
   return (
     <Provider store={store}>
       <ThemeWrapper>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <TopBar />
           <Container maxWidth="lg">
             <Switch>

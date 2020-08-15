@@ -9,7 +9,7 @@ export interface LinkProps {
 
 export const getCurrentUrl = (): string => {
   const url = window.location.href.match(/https{0,1}:\/\/[^/#?]+/);
-  return url ? url[0] : '';
+  return url ? `${url[0]}${process.env.PUBLIC_URL}` : '';
 };
 
 export const LogIn = ({ authUrl, clientId }: LinkProps) => (
