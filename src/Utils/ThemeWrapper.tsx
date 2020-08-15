@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import {
@@ -11,6 +11,7 @@ import {
 import { deepPurple, deepOrange } from '@material-ui/core/colors';
 
 import { StateType } from '../Reducers/main';
+import { setDarkMode } from '../Utils/actionCreators';
 import MetaThemeColor from './MetaThemeColor';
 
 const darkTheme = createMuiTheme({
@@ -57,9 +58,7 @@ export const ThemeWrapper = ({
 const mapStateToProps = (state: StateType) => ({
   darkMode: state.settings.darkMode,
 });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setDarkMode: (darkMode: boolean) =>
-    dispatch({ type: 'UPDATE_SETTINGS', settings: { darkMode } }),
-});
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ setDarkMode }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThemeWrapper);

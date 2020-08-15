@@ -5,12 +5,12 @@ export interface AuthenticationState {
   token_type: string;
 }
 
-interface UpdateAuthenticationAction {
+export interface UpdateAuthenticationAction {
   type: 'UPDATE_AUTHENTICATION';
   authentication: AuthenticationState;
 }
 
-interface ClearAuthentication {
+export interface ClearAuthentication {
   type: 'CLEAR_AUTHENTICATION';
 }
 

@@ -5,11 +5,6 @@ import { Page } from './Page';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    error: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
     errorTitle: {
       color: theme.palette.error.dark,
     },

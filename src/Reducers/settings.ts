@@ -28,7 +28,7 @@ try {
   initialState = { ...defaultConfig, ...savedConfig };
 }
 
-interface UpdateSettingsAction {
+export interface UpdateSettingsAction {
   type: 'UPDATE_SETTINGS';
   settings: Partial<SettingsState>;
 }
