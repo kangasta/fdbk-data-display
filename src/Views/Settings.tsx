@@ -1,5 +1,5 @@
 import React, { FocusEvent, KeyboardEvent, useEffect, useState } from 'react';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ import { StateType } from '../Reducers/main';
 import { SettingsState, SETTINGS_KEY } from '../Reducers/settings';
 import { Page } from '../Utils/Page';
 import { getCurrentUrl } from '../Utils/AuthenticationLinks';
+import { setSettings } from '../Utils/actionCreators';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -120,7 +121,7 @@ export const Settings = ({
       }, {});
     setSettings(paramSettings as Partial<SettingsState>);
     history.replace('/settings');
-  }, [setSettings]);
+  }, [setSettings, history]);
 
   const saveToLocalStorage = (): void => {
     try {
@@ -199,7 +200,7 @@ export const Settings = ({
             color="primary"
             onClick={saveToLocalStorage}
           >
-            Save settings to local storage
+            Save to local storage
           </Button>
         </div>
       </form>
@@ -222,9 +223,7 @@ export const Settings = ({
 const mapStateToProps = (state: StateType) => ({
   settings: state.settings,
 });
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setSettings: (settings: Partial<SettingsState>) =>
-    dispatch({ type: 'UPDATE_SETTINGS', settings }),
-});
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ setSettings }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

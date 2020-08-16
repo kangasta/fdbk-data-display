@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
@@ -7,6 +8,7 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 import { StateType } from '../Reducers/main';
 import { Error } from '../Utils/Error';
 import { Page } from '../Utils/Page';
+import { clearAuthentication } from '../Utils/actionCreators';
 
 const LOADING_STATUS = {
   loading: 'Loading statistics',
@@ -22,12 +24,14 @@ export interface StatisticsProps {
   apiUrl?: string;
   idToken?: string;
   tokenType?: string;
+  clearAuthentication: () => void;
 }
 
 export const Statistics = ({
   apiUrl,
   idToken,
   tokenType,
+  clearAuthentication,
 }: StatisticsProps): React.ReactElement => {
   const [statistics, setStatistics] = useState<StatisticsType>([]);
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
@@ -64,10 +68,11 @@ export const Statistics = ({
         setStatus({});
       } catch (_) {
         setStatus({ error: 'Was not able to fetch data from the server.' });
+        clearAuthentication();
       }
     };
     fetchData();
-  }, [apiUrl, tokenType, idToken]);
+  }, [apiUrl, tokenType, idToken, clearAuthentication]);
 
   if (status?.loading) {
     return (
@@ -93,5 +98,7 @@ const mapStateToProps = (state: StateType) => ({
   idToken: state.authentication?.id_token,
   tokenType: state.authentication?.token_type,
 });
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ clearAuthentication }, dispatch);
 
-export default connect(mapStateToProps)(Statistics);
+export default connect(mapStateToProps, mapDispatchToProps)(Statistics);
