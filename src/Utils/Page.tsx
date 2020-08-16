@@ -1,5 +1,11 @@
 import React from 'react';
-import { Paper, makeStyles, Theme, createStyles } from '@material-ui/core';
+import {
+  Paper,
+  makeStyles,
+  Theme,
+  createStyles,
+  PaperProps,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,8 +21,15 @@ export interface PageProps {
   children?: React.ReactNode;
 }
 
-export const Page: React.FC = ({ children }: PageProps): React.ReactElement => {
+export const Page: React.FC = ({
+  children,
+  ...props
+}: PageProps & PaperProps): React.ReactElement => {
   const classes = useStyles();
 
-  return <Paper className={classes.page}>{children}</Paper>;
+  return (
+    <Paper className={classes.page} {...props}>
+      {children}
+    </Paper>
+  );
 };

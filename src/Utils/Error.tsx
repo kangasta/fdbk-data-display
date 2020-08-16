@@ -23,7 +23,7 @@ export const Error = ({
   const classes = useStyles();
 
   return (
-    <Page>
+    <Page data-testid="error-container">
       <Typography className={classes.errorTitle} variant="h5" component="h2">
         {title}
       </Typography>
