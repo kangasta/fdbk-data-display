@@ -97,6 +97,7 @@ export const TopBar = ({
             <IconButton
               color="inherit"
               onClick={() => history.push(settingsLinkTarget)}
+              data-testid="settings-view-toggle-button"
             >
               {settingsLinkIcon}
             </IconButton>

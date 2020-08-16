@@ -52,6 +52,14 @@ export const Statistics = ({
           mode: 'cors',
         });
         const data = await response.json();
+
+        if (!data.statistics) {
+          setStatus({
+            error: 'No statistics data in the response from server.',
+          });
+          return;
+        }
+
         setStatistics(data.statistics);
         setStatus({});
       } catch (_) {

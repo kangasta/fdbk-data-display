@@ -1,4 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
+import { enableFetchMocks } from 'jest-fetch-mock';
+
+enableFetchMocks();
 
 // Fail tests on any warning
 // eslint-disable-next-line no-console
