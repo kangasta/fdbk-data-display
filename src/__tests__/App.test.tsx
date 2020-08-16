@@ -5,10 +5,6 @@ import { App } from '../App';
 
 jest.mock('chart.js');
 
-// const getInvalidResponse = (status: number = 200) => Promise.resolve({
-//   json: () => Promise.resolve({error: 'Test invalid response.'}),
-//   status: status,
-// });
 const getInvalidResponse = (status = 200) =>
   Promise.resolve(
     new Response(JSON.stringify({ error: 'Test invalid response.' }), {

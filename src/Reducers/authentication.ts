@@ -10,13 +10,13 @@ export interface UpdateAuthenticationAction {
   authentication: AuthenticationState;
 }
 
-export interface ClearAuthentication {
+export interface ClearAuthenticationAction {
   type: 'CLEAR_AUTHENTICATION';
 }
 
 export const authenticationReducer = (
   state: AuthenticationState | null = null,
-  action: ClearAuthentication | UpdateAuthenticationAction
+  action: ClearAuthenticationAction | UpdateAuthenticationAction
 ): AuthenticationState | null => {
   switch (action.type) {
     case 'UPDATE_AUTHENTICATION':

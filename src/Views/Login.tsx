@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -7,6 +7,10 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 
 import { AuthenticationState } from '../Reducers/authentication';
 import { Error } from '../Utils/Error';
+import {
+  setAuthentication,
+  clearAuthentication,
+} from '../Utils/actionCreators';
 
 const LOADING_STATUS = {
   loading: 'Logging in',
@@ -19,10 +23,12 @@ export interface StatusType {
 
 export interface LoginProps {
   setAuthentication: (authentication: AuthenticationState) => void;
+  clearAuthentication: () => void;
 }
 
 export const Login = ({
   setAuthentication,
+  clearAuthentication,
 }: LoginProps): React.ReactElement => {
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
   const history = useHistory();
@@ -37,13 +43,23 @@ export const Login = ({
       .split('&')
       .reduce((authObj: any, keyValue: string) => {
         const [key, value] = keyValue.split('=');
-        authObj[key] = value;
+        if (key === 'expires_in') {
+          authObj[key] = Number(value);
+        } else {
+          authObj[key] = value;
+        }
         return authObj;
       }, {});
 
     setAuthentication(authentication);
     history.replace('/');
-  }, [history, setAuthentication]);
+    const clearAuthTimer = setTimeout(
+      clearAuthentication,
+      authentication.expires_in
+    );
+
+    return () => clearTimeout(clearAuthTimer);
+  }, [history, setAuthentication, clearAuthentication]);
 
   if (status?.error) {
     return <Error>{status.error}</Error>;
@@ -56,9 +72,7 @@ export const Login = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setAuthentication: (authentication: AuthenticationState) =>
-    dispatch({ type: 'UPDATE_AUTHENTICATION', authentication }),
-});
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ setAuthentication, clearAuthentication }, dispatch);
 
 export default connect(null, mapDispatchToProps)(Login);
