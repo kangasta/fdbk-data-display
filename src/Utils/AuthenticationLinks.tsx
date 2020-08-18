@@ -32,6 +32,6 @@ export const LogIn = ({ authUrl, clientId }: LinkProps) => (
 
 export const LogOut = ({ authUrl, clientId }: LinkProps) => (
   <Link color="inherit" href={getLogoutUrl(authUrl, clientId)}>
-    log out
+    Log out
   </Link>
 );

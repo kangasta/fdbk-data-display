@@ -3,19 +3,18 @@ import { connect } from 'react-redux';
 
 import jwt_decode from 'jwt-decode';
 
-import { Typography, makeStyles, createStyles, Theme } from '@material-ui/core';
+import {
+  Typography,
+  IconButton,
+  useMediaQuery,
+  Menu,
+  MenuItem,
+} from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
-import { LogIn, LogOut } from '../Utils/AuthenticationLinks';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    icon: {
-      margin: theme.spacing(1),
-    },
-  })
-);
+import { LogIn, LogOut, getLoginUrl } from '../Utils/AuthenticationLinks';
+import { getDownQuery } from '../Utils/ThemeWrapper';
 
 export interface AccountContainerProps {
   authUrl?: string;
@@ -28,21 +27,59 @@ export const AccountContainer = ({
   clientId,
   idToken,
 }: AccountContainerProps): React.ReactElement | null => {
-  const classes = useStyles();
+  const downXs = useMediaQuery(getDownQuery('xs'));
+  const [anchor, setAnchor] = React.useState<null | HTMLElement>(null);
 
   if (!(clientId && authUrl)) return null;
   const id: any = idToken && jwt_decode(idToken);
-  const user = id && `${id?.given_name} ${id?.family_name}, `;
+  let user;
+  if (downXs) {
+    user = id?.given_name;
+  } else {
+    user = id && `${id?.given_name} ${id?.family_name}`;
+  }
 
   const AuthLink = id ? LogOut : LogIn;
 
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchor(null);
+  };
+
+  const iconProps = id
+    ? { onClick: handleClick }
+    : { component: 'a', href: getLoginUrl(authUrl, clientId) };
+
   return (
     <>
-      <AccountCircle className={classes.icon} />
+      <IconButton
+        color="inherit"
+        data-testid="account-menu-button"
+        {...iconProps}
+      >
+        <AccountCircle />
+      </IconButton>
       <Typography component="span" variant="subtitle1" noWrap>
         {user}
-        <AuthLink authUrl={authUrl} clientId={clientId} />
+        {id ? null : <AuthLink authUrl={authUrl} clientId={clientId} />}
       </Typography>
+      {id && (
+        <Menu
+          anchorEl={anchor}
+          open={Boolean(anchor)}
+          onClose={handleClose}
+          variant="menu"
+        >
+          <MenuItem>
+            <AuthLink authUrl={authUrl} clientId={clientId} />
+          </MenuItem>
+        </Menu>
+      )}
     </>
   );
 };

@@ -1,6 +1,18 @@
 import '@testing-library/jest-dom/extend-expect';
 import { enableFetchMocks } from 'jest-fetch-mock';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import mediaQuery from 'css-mediaquery';
+
+const createMatchMedia = (width: any): any => {
+  return (query: any) => ({
+    matches: mediaQuery.match(query, { width }),
+    addListener: () => undefined,
+    removeListener: () => undefined,
+  });
+};
+
 enableFetchMocks();
 
 // Fail tests on any warning
@@ -8,6 +20,10 @@ enableFetchMocks();
 console.error = (message: string): void => {
   throw new Error(message);
 };
+
+beforeAll(() => {
+  window.matchMedia = createMatchMedia(window.innerWidth);
+});
 
 // Clear mocks for each test
 beforeEach(() => {
