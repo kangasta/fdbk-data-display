@@ -8,7 +8,7 @@ import {
   ChartContainer,
   getChartKey,
 } from '../../Components/ChartContainer';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
 jest.mock('chart.js');
 
@@ -17,7 +17,9 @@ const testTheme = createMuiTheme();
 describe('ChartContainer', (): void => {
   it('capitalizes field name', (): void => {
     const { queryByText } = render(
-      <ChartContainer field="test" type="line" data={{}} />
+      <ThemeProvider theme={testTheme}>
+        <ChartContainer field="test" type="line" data={{}} />
+      </ThemeProvider>
     );
 
     expect(queryByText('test')).not.toBeInTheDocument();

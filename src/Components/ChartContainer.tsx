@@ -16,6 +16,7 @@ import {
   useTheme,
   makeStyles,
   createStyles,
+  useMediaQuery,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +38,23 @@ const getChartColors = (theme: Theme): string[] => [
   theme.palette.warning.main,
 ];
 
-const getCommonChartOptions = (theme: Theme): ChartOptions => ({
+type widthParam = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+const getDownQuery = (width: widthParam) => (theme: Theme) =>
+  theme.breakpoints.down(width);
+
+const getAspectRatio = (downSm: boolean, downXs: boolean): number => {
+  if (downXs) {
+    return 1.25;
+  } else if (downSm) {
+    return 2.0;
+  }
+  return 2.75;
+};
+
+const getCommonChartOptions = (
+  theme: Theme,
+  aspectRatio = 2.75
+): ChartOptions => ({
   plugins: {
     colorschemes: {
       fillAlpha: 0.0,
@@ -50,7 +67,7 @@ const getCommonChartOptions = (theme: Theme): ChartOptions => ({
       fontColor: theme.palette.text.secondary,
     },
   },
-  aspectRatio: 2.75,
+  aspectRatio,
   tooltips: {
     callbacks: {
       label: getRoundedLabel,
@@ -97,12 +114,13 @@ const getLineChartOptions = (theme: Theme): ChartOptions => ({
 
 export const getChartOptions = (
   type: ChartType,
-  theme: Theme
+  theme: Theme,
+  aspectRatio = 2.75
 ): ChartOptions => {
   switch (type) {
     case 'line':
       return {
-        ...getCommonChartOptions(theme),
+        ...getCommonChartOptions(theme, aspectRatio),
         ...getLineChartOptions(theme),
       };
     default:
@@ -135,16 +153,22 @@ export const ChartContainer = ({
   const theme = useTheme();
   const classes = useStyles();
 
+  const downSm = useMediaQuery(getDownQuery('sm'));
+  const downXs = useMediaQuery(getDownQuery('xs'));
+
   return (
     <div className={classes.container}>
       <Typography className={classes.title} variant="h5" component="h2">
         {capitalize(field)}
       </Typography>
       <Chart
-        key={getChartKey({ field, type })}
+        key={`${getChartKey({ field, type })}-${getAspectRatio(
+          downSm,
+          downXs
+        )}`}
         data={data}
         type={type}
-        options={getChartOptions(type, theme)}
+        options={getChartOptions(type, theme, getAspectRatio(downSm, downXs))}
       />
     </div>
   );
