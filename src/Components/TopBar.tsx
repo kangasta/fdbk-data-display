@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useRouteMatch, useHistory } from 'react-router-dom';
@@ -13,8 +13,19 @@ import {
   IconButton,
   Tooltip,
   useMediaQuery,
+  Hidden,
+  Drawer,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@material-ui/core';
-import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
+import {
+  InvertColors,
+  Settings,
+  GitHub,
+  Home,
+  ExpandMore,
+} from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { setDarkMode } from '../Utils/actionCreators';
@@ -64,6 +75,8 @@ export const TopBar = ({
   const isSettingsActive = useRouteMatch('/settings');
   const downXs = useMediaQuery(getDownQuery('xs'));
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     window.document.title = title;
   }, [title]);
@@ -78,6 +91,31 @@ export const TopBar = ({
   const settingsLinkView = isSettingsActive ? 'home' : 'settings';
   const settingsLinkIcon = isSettingsActive ? <Home /> : <Settings />;
 
+  const menuItems = [
+    {
+      text: 'Open GitHub repository',
+      onClick: () => {
+        window.open('https://github.com/kangasta/fdbk-data-display', '_blank');
+      },
+      icon: <GitHub />,
+      testid: 'github-open-button',
+    },
+    {
+      text: `Open ${settingsLinkView}`,
+      onClick: () => history.push(settingsLinkTarget),
+      icon: settingsLinkIcon,
+      testid: 'settings-view-toggle-button',
+    },
+    {
+      text: 'Toggle dark mode',
+      onClick: toggleDarkMode,
+      icon: <InvertColors />,
+      testid: 'darkmode-toggle-button',
+      className: invertColorsClasses,
+      edge: (hasAuthentication ? false : 'end') as false | 'end',
+    },
+  ];
+
   return (
     <AppBar className={classes.appBar} position="static">
       <PageContainer>
@@ -90,37 +128,58 @@ export const TopBar = ({
           >
             {title}
           </Typography>
-          <Tooltip title="Open GitHub repository">
+          <Hidden xsDown>
+            {menuItems.map(({ text, onClick, icon, testid, ...props }) => (
+              <Tooltip key={testid} title={text}>
+                <IconButton
+                  color="inherit"
+                  onClick={onClick}
+                  data-testid={testid}
+                  {...props}
+                >
+                  {icon}
+                </IconButton>
+              </Tooltip>
+            ))}
+          </Hidden>
+          <Hidden smUp>
             <IconButton
-              color="inherit"
-              component="a"
-              href="https://github.com/kangasta/fdbk-data-display"
-              target="_blank"
-            >
-              <GitHub />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={`Open ${settingsLinkView}`}>
-            <IconButton
-              color="inherit"
-              onClick={() => history.push(settingsLinkTarget)}
-              data-testid="settings-view-toggle-button"
-            >
-              {settingsLinkIcon}
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Toggle dark mode">
-            <IconButton
-              className={invertColorsClasses}
-              onClick={toggleDarkMode}
+              onClick={() => setMenuOpen(true)}
               color="inherit"
               edge={hasAuthentication ? false : 'end'}
-              data-testid="darkmode-toggle-button"
+              data-testid="menu-toggle-button"
             >
-              <InvertColors />
+              <ExpandMore />
             </IconButton>
-          </Tooltip>
+          </Hidden>
           <AccountContainer />
+          <Drawer
+            anchor="top"
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+          >
+            {menuItems.map(({ text, onClick, icon, testid }) => (
+              <ListItem
+                button
+                onClick={() => {
+                  onClick();
+                  setMenuOpen(false);
+                }}
+                key={testid}
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+            {/* <List>
+              {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                <ListItem button key={text}>
+                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              ))}
+            </List> */}
+          </Drawer>
         </Toolbar>
       </PageContainer>
     </AppBar>

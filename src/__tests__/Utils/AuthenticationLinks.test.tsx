@@ -30,7 +30,7 @@ describe('LogIn and LogOut', (): void => {
   });
   it.each([
     ['LogIn', 'Log in', LogIn, getLoginUrl],
-    ['LogOut', 'log out', LogOut, getLogoutUrl],
+    ['LogOut', 'Log out', LogOut, getLogoutUrl],
   ])('%s has correct link with %s text', (_, text, CUT, helper): void => {
     const { queryByText } = render(<CUT authUrl="http://auth" clientId="id" />);
     expect(queryByText(text)).toBeInTheDocument();
