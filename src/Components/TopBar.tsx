@@ -11,14 +11,16 @@ import {
   AppBar,
   Typography,
   IconButton,
-  Container,
   Tooltip,
+  useMediaQuery,
 } from '@material-ui/core';
 import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { setDarkMode } from '../Utils/actionCreators';
 import AccountContainer from './AccountContainer';
+import { PageContainer } from '../Utils/Page';
+import { getDownQuery } from '../Utils/ThemeWrapper';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
         theme.palette.type == 'dark'
           ? theme.palette.grey['800']
           : theme.palette.primary.main,
+      [theme.breakpoints.down('xs')]: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+      },
     },
     darkMode: {
       transform: 'scaleX(-1)',
@@ -56,6 +62,7 @@ export const TopBar = ({
   const classes = useStyles();
   const history = useHistory();
   const isSettingsActive = useRouteMatch('/settings');
+  const downXs = useMediaQuery(getDownQuery('xs'));
 
   useEffect(() => {
     window.document.title = title;
@@ -73,8 +80,8 @@ export const TopBar = ({
 
   return (
     <AppBar className={classes.appBar} position="static">
-      <Container maxWidth="lg">
-        <Toolbar>
+      <PageContainer>
+        <Toolbar disableGutters={downXs}>
           <Typography
             className={classes.title}
             component="h1"
@@ -115,7 +122,7 @@ export const TopBar = ({
           </Tooltip>
           <AccountContainer />
         </Toolbar>
-      </Container>
+      </PageContainer>
     </AppBar>
   );
 };

@@ -19,6 +19,8 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 
+import { getDownQuery } from '../Utils/ThemeWrapper';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     title: {
@@ -37,10 +39,6 @@ const getChartColors = (theme: Theme): string[] => [
   theme.palette.success.main,
   theme.palette.warning.main,
 ];
-
-type widthParam = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-const getDownQuery = (width: widthParam) => (theme: Theme) =>
-  theme.breakpoints.down(width);
 
 const getAspectRatio = (downSm: boolean, downXs: boolean): number => {
   if (downXs) {

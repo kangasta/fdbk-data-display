@@ -4,14 +4,13 @@ import { Provider } from 'react-redux';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { Container } from '@material-ui/core';
-
 import TopBar from './Components/TopBar';
 import mainReducer from './Reducers/main';
 import ThemeWrapper from './Utils/ThemeWrapper';
 import Login from './Views/Login';
 import Settings from './Views/Settings';
 import Statistics from './Views/Statistics';
+import { PageContainer } from './Utils/Page';
 
 const store = createStore(mainReducer);
 
@@ -21,7 +20,7 @@ export const App = (): React.ReactElement => {
       <ThemeWrapper>
         <Router basename={process.env.PUBLIC_URL}>
           <TopBar />
-          <Container maxWidth="lg">
+          <PageContainer>
             <Switch>
               <Route path="/login">
                 <Login />
@@ -33,7 +32,7 @@ export const App = (): React.ReactElement => {
                 <Statistics />
               </Route>
             </Switch>
-          </Container>
+          </PageContainer>
         </Router>
       </ThemeWrapper>
     </Provider>

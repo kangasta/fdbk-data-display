@@ -2,6 +2,8 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+
 import { render } from '@testing-library/react';
 
 import { TEST_ID_TOKEN } from '../../setupTests';
@@ -25,6 +27,8 @@ const authenticationState = {
   token_type: 'Bearer',
 };
 
+const testTheme = createMuiTheme();
+
 it('clears authentication on failed fetch', async (): Promise<any> => {
   const fetchSpy = jest
     .spyOn(window, 'fetch')
@@ -36,7 +40,9 @@ it('clears authentication on failed fetch', async (): Promise<any> => {
 
   const { findByTestId } = render(
     <Provider store={store}>
-      <ConnectedStatistics />
+      <ThemeProvider theme={testTheme}>
+        <ConnectedStatistics />
+      </ThemeProvider>
     </Provider>
   );
 
