@@ -10,12 +10,15 @@ import { TEST_ID_TOKEN } from '../../setupTests';
 import mainReducer from '../../Reducers/main';
 import ConnectedLogin from '../../Views/Login';
 import { setSettings } from '../../Utils/actionCreators';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
 const settingsState = {
   apiUrl: 'http://api',
   authUrl: 'http://auth',
   clientId: 'asd',
 };
+
+const testTheme = createMuiTheme();
 
 it('stores login details on page load and clears them when they expire', async (): Promise<
   any
@@ -31,11 +34,13 @@ it('stores login details on page load and clears them when they expire', async (
 
   render(
     <Provider store={store}>
-      <Router>
-        <Route>
-          <ConnectedLogin />
-        </Route>
-      </Router>
+      <ThemeProvider theme={testTheme}>
+        <Router>
+          <Route>
+            <ConnectedLogin />
+          </Route>
+        </Router>
+      </ThemeProvider>
     </Provider>
   );
 
@@ -53,11 +58,13 @@ it('shows error if url does not contain tokens', async (): Promise<any> => {
 
   const { container, findByTestId } = render(
     <Provider store={store}>
-      <Router>
-        <Route>
-          <ConnectedLogin />
-        </Route>
-      </Router>
+      <ThemeProvider theme={testTheme}>
+        <Router>
+          <Route>
+            <ConnectedLogin />
+          </Route>
+        </Router>
+      </ThemeProvider>
     </Provider>
   );
 

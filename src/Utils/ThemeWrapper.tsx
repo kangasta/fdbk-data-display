@@ -7,12 +7,17 @@ import {
   createMuiTheme,
   CssBaseline,
   useMediaQuery,
+  Theme,
 } from '@material-ui/core';
 import { deepPurple, deepOrange } from '@material-ui/core/colors';
 
 import { StateType } from '../Reducers/main';
 import { setDarkMode } from '../Utils/actionCreators';
 import MetaThemeColor from './MetaThemeColor';
+
+type widthParam = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export const getDownQuery = (width: widthParam) => (theme: Theme) =>
+  theme.breakpoints.down(width);
 
 const darkTheme = createMuiTheme({
   palette: {
