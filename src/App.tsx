@@ -10,7 +10,9 @@ import ThemeWrapper from './Utils/ThemeWrapper';
 import Login from './Views/Login';
 import Settings from './Views/Settings';
 import Statistics from './Views/Statistics';
+import { Footer } from './Utils/Footer';
 import { PageContainer } from './Utils/Page';
+import { View } from './Utils/View';
 
 const store = createStore(mainReducer);
 
@@ -19,20 +21,22 @@ export const App = (): React.ReactElement => {
     <Provider store={store}>
       <ThemeWrapper>
         <Router basename={process.env.PUBLIC_URL}>
-          <TopBar />
-          <PageContainer>
-            <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/settings">
-                <Settings />
-              </Route>
-              <Route path="/">
-                <Statistics />
-              </Route>
-            </Switch>
-          </PageContainer>
+          <View footer={<Footer />}>
+            <TopBar />
+            <PageContainer>
+              <Switch>
+                <Route path="/login">
+                  <Login />
+                </Route>
+                <Route path="/settings">
+                  <Settings />
+                </Route>
+                <Route path="/">
+                  <Statistics />
+                </Route>
+              </Switch>
+            </PageContainer>
+          </View>
         </Router>
       </ThemeWrapper>
     </Provider>
