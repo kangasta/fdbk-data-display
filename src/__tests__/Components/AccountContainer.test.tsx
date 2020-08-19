@@ -10,7 +10,7 @@ const testTheme = createMuiTheme();
 
 describe('AccountContainer', (): void => {
   it('displays users name when user is logged in (given_name family_name)', async (): Promise<
-    any
+    void
   > => {
     const { container, findByText, findByTestId } = render(
       <ThemeProvider theme={testTheme}>

@@ -21,7 +21,7 @@ const settingsState = {
 const testTheme = createMuiTheme();
 
 it('stores login details on page load and clears them when they expire', async (): Promise<
-  any
+  void
 > => {
   const store = createStore(mainReducer);
   store.dispatch(setSettings(settingsState));
@@ -51,7 +51,7 @@ it('stores login details on page load and clears them when they expire', async (
   expect(store.getState().authentication).toBeNull();
 });
 
-it('shows error if url does not contain tokens', async (): Promise<any> => {
+it('shows error if url does not contain tokens', async (): Promise<void> => {
   const store = createStore(mainReducer);
 
   window.history.pushState(null, 'title', `http://localhost/login`);
