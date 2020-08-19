@@ -9,7 +9,8 @@ script:
 - npm run lint
 - npm test -- --coverage --verbose
 - echo 'PUBLIC_URL="/fdbk-data-display/"' > .env
-- echo "VERSION=\"${TRAVIS_COMMIT}\"" >> .env
+- echo "COMMIT=\"${TRAVIS_COMMIT}\"" >> .env
+- echo "TAG=\"${TRAVIS_TAG}\"" >> .env
 - npm run build -- --public-url /fdbk-data-display/
 - cp dist/index.html dist/404.html
 after_script:
