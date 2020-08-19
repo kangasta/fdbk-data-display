@@ -18,8 +18,13 @@ export interface ViewProps {
 
 export const Footer = (): React.ReactElement | null => {
   const classes = useStyles();
-  const version = process.env.VERSION;
+  const tag = process.env.TAG;
+  const commit = process.env.COMMIT?.slice(0, 8);
 
-  if (!version) return null;
-  return <p className={classes.footer}>Version: {version}</p>;
+  if (!commit) return null;
+  return (
+    <p className={classes.footer}>
+      Version: {tag} {commit}
+    </p>
+  );
 };
