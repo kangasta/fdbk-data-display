@@ -29,7 +29,7 @@ const authenticationState = {
 
 const testTheme = createMuiTheme();
 
-it('clears authentication on failed fetch', async (): Promise<any> => {
+it('clears authentication on failed fetch', async (): Promise<void> => {
   const fetchSpy = jest
     .spyOn(window, 'fetch')
     .mockImplementation(() => rejectIn(2500));

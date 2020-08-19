@@ -60,7 +60,6 @@ const SettingsStringField = ({
   ...props
 }: SettingsStringFieldProps & TextFieldProps): React.ReactElement => {
   const setField = (value: string) => {
-    if (!value) return;
     setSettings({ [field]: value });
   };
 
@@ -74,7 +73,13 @@ const SettingsStringField = ({
   };
 
   return (
-    <TextField name={field} {...props} onBlur={onBlur} onKeyUp={onKeyUp} />
+    <TextField
+      id={`${field}-input`}
+      name={field}
+      {...props}
+      onBlur={onBlur}
+      onKeyUp={onKeyUp}
+    />
   );
 };
 
