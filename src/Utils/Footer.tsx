@@ -1,10 +1,11 @@
 import React from 'react';
-import { Typography, makeStyles, Theme, createStyles } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     footer: {
       color: theme.palette.text.secondary,
+      marginBottom: theme.spacing(0.5),
       textAlign: 'center',
     },
   })
@@ -20,9 +21,5 @@ export const Footer = (): React.ReactElement | null => {
   const version = process.env.VERSION;
 
   if (!version) return null;
-  return (
-    <div className={classes.footer}>
-      <Typography variant="subtitle1">Version: {version}</Typography>
-    </div>
-  );
+  return <p className={classes.footer}>Version: {version}</p>;
 };
