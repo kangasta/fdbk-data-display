@@ -1,14 +1,12 @@
 import React from 'react';
 import {
   Paper,
-  makeStyles,
-  Theme,
-  createStyles,
   PaperProps,
   useMediaQuery,
   ContainerProps,
   Container,
 } from '@material-ui/core';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { getDownQuery } from './ThemeWrapper';
 
 const useStyles = makeStyles((theme: Theme) =>

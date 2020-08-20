@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { ChartData, ChartTooltipItem, ChartType } from 'chart.js';
 
 import { render } from '@testing-library/react';

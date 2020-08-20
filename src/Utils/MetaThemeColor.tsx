@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
 export const MetaThemeColor = (): null => {
   const theme = useTheme();

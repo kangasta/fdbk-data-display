@@ -8,7 +8,7 @@ import { render } from '@testing-library/react';
 
 import mainReducer from '../../Reducers/main';
 import ConnectedSettings from '../../Views/Settings';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const testTheme = createMuiTheme();
 

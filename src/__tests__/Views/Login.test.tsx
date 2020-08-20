@@ -10,7 +10,7 @@ import { TEST_ID_TOKEN } from '../../setupTests';
 import mainReducer from '../../Reducers/main';
 import ConnectedLogin from '../../Views/Login';
 import { setSettings } from '../../Utils/actionCreators';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const settingsState = {
   apiUrl: 'http://api',
