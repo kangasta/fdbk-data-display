@@ -10,14 +10,13 @@ import {
 } from 'chart.js';
 import 'chartjs-plugin-colorschemes';
 
+import { Typography, useMediaQuery } from '@material-ui/core';
 import {
-  Typography,
   Theme,
-  useTheme,
   makeStyles,
   createStyles,
-  useMediaQuery,
-} from '@material-ui/core';
+  useTheme,
+} from '@material-ui/core/styles';
 
 import { getDownQuery } from '../Utils/ThemeWrapper';
 

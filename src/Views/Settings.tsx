@@ -6,9 +6,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Typography,
   TextField,
-  makeStyles,
-  Theme,
-  createStyles,
+  TextFieldProps,
   Button,
   Snackbar,
   IconButton,
@@ -16,7 +14,8 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { FileCopy } from '@material-ui/icons';
-import { TextFieldProps } from '@material-ui/core/TextField';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+
 import Alert from '@material-ui/lab/Alert';
 
 import { StateType } from '../Reducers/main';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Page } from './Page';
 

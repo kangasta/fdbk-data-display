@@ -2,13 +2,9 @@ import React, { useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import {
-  ThemeProvider,
-  createMuiTheme,
-  CssBaseline,
-  useMediaQuery,
-  Theme,
-} from '@material-ui/core';
+import { CssBaseline, useMediaQuery } from '@material-ui/core';
+
+import { ThemeProvider, createMuiTheme, Theme } from '@material-ui/core/styles';
 import { deepPurple, deepOrange } from '@material-ui/core/colors';
 
 import { StateType } from '../Reducers/main';

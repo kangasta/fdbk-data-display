@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { TEST_ID_NAME, TEST_ID_TOKEN } from '../../setupTests';
 import { AccountContainer } from '../../Components/AccountContainer';

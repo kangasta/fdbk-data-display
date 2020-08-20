@@ -5,9 +5,6 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 
 import {
   Toolbar,
-  makeStyles,
-  Theme,
-  createStyles,
   AppBar,
   Typography,
   IconButton,
@@ -26,6 +23,7 @@ import {
   Home,
   ExpandMore,
 } from '@material-ui/icons';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { StateType } from '../Reducers/main';
 import { setDarkMode } from '../Utils/actionCreators';
