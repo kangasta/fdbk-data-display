@@ -21,7 +21,7 @@ export const Footer = (): React.ReactElement | null => {
   const tag = process.env.TAG;
   const commit = process.env.COMMIT?.slice(0, 8);
 
-  if (!commit) return null;
+  if (!commit && !tag) return null;
   return (
     <p className={classes.footer}>
       Version: {tag} {commit}
