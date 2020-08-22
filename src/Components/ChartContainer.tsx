@@ -86,10 +86,18 @@ const getGridStyling = (theme: Theme): ChartScales => ({
 });
 
 const getRoundedLabel = (tooltipItem: ChartTooltipItem, data: ChartData) => {
+  const index = tooltipItem.index === undefined ? -1 : tooltipItem.index;
   const datasetIndex =
     tooltipItem.datasetIndex === undefined ? -1 : tooltipItem.datasetIndex;
-  const label = data.datasets?.[datasetIndex]?.label || '';
-  const value = Math.round((Number(tooltipItem.yLabel) || 0) * 100) / 100;
+
+  const label =
+    data.datasets?.[datasetIndex]?.label || data.labels?.[index] || '';
+
+  const raw_value = tooltipItem.yLabel
+    ? Number(tooltipItem.yLabel)
+    : Number(data?.datasets?.[datasetIndex]?.data?.[index]);
+  const value = Math.round((raw_value || 0) * 100) / 100;
+
   return ` ${label}${label ? ': ' : ''}${value}`;
 };
 
@@ -121,7 +129,7 @@ export const getChartOptions = (
         ...getLineChartOptions(theme),
       };
     default:
-      return getCommonChartOptions(theme);
+      return getCommonChartOptions(theme, aspectRatio);
   }
 };
 
