@@ -9,7 +9,9 @@ import { StateType } from '../Reducers/main';
 import { Error } from '../Utils/Error';
 import { Page } from '../Utils/Page';
 import { clearAuthentication } from '../Utils/actionCreators';
+import { GettingStarted } from './GettingStarted';
 
+const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {
   loading: 'Loading statistics',
 };
@@ -39,7 +41,7 @@ export const Statistics = ({
   useEffect(() => {
     const fetchData = async () => {
       if (!apiUrl) {
-        setStatus({ error: 'API not configured. Can not load data.' });
+        setStatus({ error: API_NOT_CONFIGURED });
         return;
       }
 
@@ -80,6 +82,10 @@ export const Statistics = ({
         <CircularProgress color="primary" />
       </Backdrop>
     );
+  }
+
+  if (status?.error === API_NOT_CONFIGURED) {
+    return <GettingStarted />;
   }
 
   if (status?.error) {

@@ -41,12 +41,11 @@ it('has darkmode toggle', async (): Promise<void> => {
   expect(document.body).toHaveStyle('background-color: #fafafa');
 });
 
-it('shows error message when API URL is not configured', async (): Promise<
+it('shows getting started page when API URL is not configured', async (): Promise<
   void
 > => {
-  const { findByTestId } = render(<App />);
-  const errorContainer = await findByTestId('error-container');
-  expect(errorContainer.textContent).toContain('API not configured');
+  const { findByText } = render(<App />);
+  await findByText('Getting started');
 });
 
 it('allows configuring API URL and shows error message on invalid response from API', async (): Promise<
