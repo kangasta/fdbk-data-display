@@ -1,6 +1,8 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { createMatchMedia } from '../setupTests';
+
 import { App } from '../App';
 
 jest.mock('chart.js');
@@ -86,4 +88,21 @@ it('allows setting page title in settings', async (): Promise<void> => {
   await fireEvent.click(settingsToggle);
   await changeInputValue('Page title', '');
   expect(container.textContent).not.toContain(testTitle);
+});
+
+it('hides menu items in speed dial on small screens', async (): Promise<
+  void
+> => {
+  window.matchMedia = createMatchMedia(500);
+  const { findByTestId } = render(<App />);
+
+  const settingsToggle = await findByTestId('settings-view-toggle-button');
+  expect(settingsToggle).toHaveClass('MuiSpeedDialAction-fabClosed');
+
+  const menuToggle = await findByTestId('menu-toggle-button');
+  await fireEvent.click(menuToggle);
+  expect(settingsToggle).not.toHaveClass('MuiSpeedDialAction-fabClosed');
+
+  await fireEvent.click(menuToggle);
+  expect(settingsToggle).toHaveClass('MuiSpeedDialAction-fabClosed');
 });
