@@ -151,12 +151,13 @@ export const TopBar = ({
       <Hidden smUp>
         <Backdrop className={classes.backDrop} open={menuOpen} />
         <SpeedDial
-          ariaLabel=""
+          ariaLabel="More menu"
           className={classes.speedDial}
           icon={<SpeedDialIcon />}
           onClose={() => setMenuOpen(false)}
           onOpen={() => setMenuOpen(true)}
           open={menuOpen}
+          FabProps={{ 'data-testid': 'menu-toggle-button' } as any}
         >
           {menuItems.map(({ text, onClick, icon, testid }) => (
             <SpeedDialAction
@@ -169,6 +170,7 @@ export const TopBar = ({
                 onClick();
                 setMenuOpen(false);
               }}
+              FabProps={{ 'data-testid': testid } as any}
             />
           ))}
         </SpeedDial>

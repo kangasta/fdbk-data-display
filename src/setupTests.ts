@@ -5,7 +5,7 @@ import { enableFetchMocks } from 'jest-fetch-mock';
 // @ts-ignore
 import mediaQuery from 'css-mediaquery';
 
-const createMatchMedia = (width: any): any => {
+export const createMatchMedia = (width: any): any => {
   return (query: any) => ({
     matches: mediaQuery.match(query, { width }),
     addListener: () => undefined,
