@@ -11,18 +11,10 @@ import {
   Tooltip,
   useMediaQuery,
   Hidden,
-  Drawer,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
+  Backdrop,
 } from '@material-ui/core';
-import {
-  InvertColors,
-  Settings,
-  GitHub,
-  Home,
-  ExpandMore,
-} from '@material-ui/icons';
+import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { StateType } from '../Reducers/main';
@@ -43,11 +35,22 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingRight: theme.spacing(2),
       },
     },
+    backDrop: {
+      zIndex: theme.zIndex.speedDial - 1,
+    },
     darkMode: {
       transform: 'scaleX(-1)',
     },
     invertColorsIcon: {
       transition: 'transform 250ms ease-in-out',
+    },
+    speedDial: {
+      position: 'fixed',
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
+    },
+    speedDialTooltip: {
+      whiteSpace: 'nowrap',
     },
     title: {
       flexGrow: 1,
@@ -115,64 +118,62 @@ export const TopBar = ({
   ];
 
   return (
-    <AppBar className={classes.appBar} position="static">
-      <PageContainer>
-        <Toolbar disableGutters={downXs}>
-          <Typography
-            className={classes.title}
-            component="h1"
-            variant="h6"
-            noWrap
-          >
-            {title}
-          </Typography>
-          <Hidden xsDown>
-            {menuItems.map(({ text, onClick, icon, testid, ...props }) => (
-              <Tooltip key={testid} title={text}>
-                <IconButton
-                  color="inherit"
-                  onClick={onClick}
-                  data-testid={testid}
-                  {...props}
-                >
-                  {icon}
-                </IconButton>
-              </Tooltip>
-            ))}
-          </Hidden>
-          <Hidden smUp>
-            <IconButton
-              onClick={() => setMenuOpen(true)}
-              color="inherit"
-              edge={hasAuthentication ? false : 'end'}
-              data-testid="menu-toggle-button"
+    <>
+      <AppBar className={classes.appBar} position="static">
+        <PageContainer>
+          <Toolbar disableGutters={downXs}>
+            <Typography
+              className={classes.title}
+              component="h1"
+              variant="h6"
+              noWrap
             >
-              <ExpandMore />
-            </IconButton>
-          </Hidden>
-          <AccountContainer />
-          <Drawer
-            anchor="top"
-            open={menuOpen}
-            onClose={() => setMenuOpen(false)}
-          >
-            {menuItems.map(({ text, onClick, icon, testid }) => (
-              <ListItem
-                button
-                onClick={() => {
-                  onClick();
-                  setMenuOpen(false);
-                }}
-                key={testid}
-              >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </Drawer>
-        </Toolbar>
-      </PageContainer>
-    </AppBar>
+              {title}
+            </Typography>
+            <Hidden xsDown>
+              {menuItems.map(({ text, onClick, icon, testid, ...props }) => (
+                <Tooltip key={testid} title={text}>
+                  <IconButton
+                    color="inherit"
+                    onClick={onClick}
+                    data-testid={testid}
+                    {...props}
+                  >
+                    {icon}
+                  </IconButton>
+                </Tooltip>
+              ))}
+            </Hidden>
+            <AccountContainer />
+          </Toolbar>
+        </PageContainer>
+      </AppBar>
+      <Hidden smUp>
+        <Backdrop className={classes.backDrop} open={menuOpen} />
+        <SpeedDial
+          ariaLabel=""
+          className={classes.speedDial}
+          icon={<SpeedDialIcon />}
+          onClose={() => setMenuOpen(false)}
+          onOpen={() => setMenuOpen(true)}
+          open={menuOpen}
+        >
+          {menuItems.map(({ text, onClick, icon, testid }) => (
+            <SpeedDialAction
+              key={testid}
+              classes={{ staticTooltipLabel: classes.speedDialTooltip }}
+              icon={icon}
+              tooltipTitle={text}
+              tooltipOpen
+              onClick={() => {
+                onClick();
+                setMenuOpen(false);
+              }}
+            />
+          ))}
+        </SpeedDial>
+      </Hidden>
+    </>
   );
 };
 
