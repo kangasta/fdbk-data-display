@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     page: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(6),
+      marginBottom: theme.spacing(3),
       padding: theme.spacing(3),
       [theme.breakpoints.down('xs')]: {
         paddingLeft: theme.spacing(2),

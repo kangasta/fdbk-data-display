@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { createMatchMedia } from '../setupTests';
+import { createMatchMedia, getKeyUpEvent } from '../setupTests';
 
 import { App } from '../App';
 
@@ -20,10 +20,7 @@ const changeInputValue = async (
   value: string
 ): Promise<void> => {
   const field = await screen.findByLabelText(label);
-  await fireEvent.keyUp(field, {
-    key: 'Enter',
-    target: { value },
-  });
+  await fireEvent.keyUp(field, getKeyUpEvent(value));
 };
 
 it('renders without crashing', (): void => {
@@ -63,6 +60,7 @@ it('allows configuring API URL and shows error message on invalid response from 
   await fireEvent.click(settingsToggle);
 
   await changeInputValue('Statistics URL', testApi);
+  await fireEvent.click(await screen.findByLabelText('Display query bar'));
   await fireEvent.click(settingsToggle);
 
   const errorContainer = await findByTestId('error-container');

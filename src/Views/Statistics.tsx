@@ -4,17 +4,43 @@ import { connect } from 'react-redux';
 
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
 import { Backdrop, CircularProgress } from '@material-ui/core';
+import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { StateType } from '../Reducers/main';
 import { Error } from '../Utils/Error';
 import { Page } from '../Utils/Page';
 import { clearAuthentication } from '../Utils/actionCreators';
 import { GettingStarted } from './GettingStarted';
+import QueryBar from '../Components/QueryBar';
+import { QueryState } from '../Reducers/query';
+import { withQueryString } from '../Utils/queryUtils';
 
 const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {
   loading: 'Loading statistics',
 };
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    center: {
+      textAlign: 'center',
+    },
+    showLoading: {
+      marginTop: theme.spacing(3),
+      maxHeight: '100px',
+      opacity: 1,
+      // transform: 'scaleY(1)',
+      transition: 'all 250ms',
+    },
+    hideLoading: {
+      marginTop: 0,
+      maxHeight: 0,
+      opacity: 0,
+      // transform: 'scaleY(0)',
+      transition: 'all 250ms',
+    },
+  })
+);
 
 export type StatisticsType = any[];
 export interface StatusType {
@@ -23,18 +49,27 @@ export interface StatusType {
 }
 
 export interface StatisticsProps {
+  aggregateTo?: number;
   apiUrl?: string;
   idToken?: string;
+  limit?: number;
+  query: QueryState;
+  showQueryBar: boolean;
   tokenType?: string;
   clearAuthentication: () => void;
 }
 
 export const Statistics = ({
+  aggregateTo,
   apiUrl,
   idToken,
+  limit,
+  query,
+  showQueryBar,
   tokenType,
   clearAuthentication,
 }: StatisticsProps): React.ReactElement => {
+  const classes = useStyles();
   const [statistics, setStatistics] = useState<StatisticsType>([]);
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
 
@@ -53,7 +88,11 @@ export const Statistics = ({
               }
             : undefined;
 
-        const response = await fetch(apiUrl, {
+        setStatus(LOADING_STATUS);
+        const url = showQueryBar
+          ? withQueryString(apiUrl, query, { aggregate_to: aggregateTo, limit })
+          : apiUrl;
+        const response = await fetch(url, {
           headers,
           mode: 'cors',
         });
@@ -74,9 +113,18 @@ export const Statistics = ({
       }
     };
     fetchData();
-  }, [apiUrl, tokenType, idToken, clearAuthentication]);
+  }, [
+    apiUrl,
+    tokenType,
+    idToken,
+    query,
+    clearAuthentication,
+    aggregateTo,
+    limit,
+    showQueryBar,
+  ]);
 
-  if (status?.loading) {
+  if (status?.loading && !statistics.length) {
     return (
       <Backdrop open invisible>
         <CircularProgress color="primary" />
@@ -96,13 +144,29 @@ export const Statistics = ({
     .filter((i) => i.type === 'chart')
     .map((i) => <ChartContainer key={getChartKey(i.payload)} {...i.payload} />);
 
-  return <Page>{charts}</Page>;
+  const loadingClasses = `${classes.center} ${
+    status?.loading ? classes.showLoading : classes.hideLoading
+  }`;
+
+  return (
+    <>
+      <div className={loadingClasses}>
+        <CircularProgress color="primary" />
+      </div>
+      {showQueryBar && <QueryBar />}
+      <Page>{charts}</Page>
+    </>
+  );
 };
 
-const mapStateToProps = (state: StateType) => ({
-  apiUrl: state.settings.apiUrl,
-  idToken: state.authentication?.id_token,
-  tokenType: state.authentication?.token_type,
+const mapStateToProps = ({ authentication, query, settings }: StateType) => ({
+  aggregateTo: settings.aggregateTo,
+  apiUrl: settings.apiUrl,
+  idToken: authentication?.id_token,
+  limit: settings.limit,
+  showQueryBar: settings.showQueryBar,
+  query,
+  tokenType: authentication?.token_type,
 });
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators({ clearAuthentication }, dispatch);
