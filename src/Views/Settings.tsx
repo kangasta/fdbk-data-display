@@ -1,11 +1,10 @@
-import React, { FocusEvent, KeyboardEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import {
   Typography,
-  TextField,
   TextFieldProps,
   Button,
   Snackbar,
@@ -23,6 +22,12 @@ import { SettingsState, SETTINGS_KEY } from '../Reducers/settings';
 import { Page } from '../Utils/Page';
 import { getCurrentUrl } from '../Utils/AuthenticationLinks';
 import { setSettings } from '../Utils/actionCreators';
+import {
+  SetterField,
+  SetterFieldOwnProps,
+  SetterCheckbox,
+} from '../Utils/SetterField';
+import { QueryObject } from '../Utils/queryUtils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,50 +48,40 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface StringFieldDefinition {
+const SettingsStringField = (
+  props: Omit<SetterFieldOwnProps<string, SettingsState>, 'modifier'> &
+    TextFieldProps
+): React.ReactElement => (
+  <SetterField<string, SettingsState>
+    {...props}
+    modifier={(value: string) => String(value)}
+  />
+);
+
+const SettingsNumberField = (
+  props: Omit<SetterFieldOwnProps<number, SettingsState>, 'modifier'> &
+    TextFieldProps
+): React.ReactElement => (
+  <SetterField<number, SettingsState>
+    {...props}
+    modifier={(value: string) => Number(value)}
+  />
+);
+
+interface FieldDefinition {
   field: keyof SettingsState;
   label: string;
+  type: 'string' | 'number' | 'boolean';
 }
 
-export interface SettingsStringFieldProps extends StringFieldDefinition {
-  defaultValue?: string;
-  setSettings: (settings: Partial<SettingsState>) => void;
-}
-
-const SettingsStringField = ({
-  field,
-  setSettings,
-  ...props
-}: SettingsStringFieldProps & TextFieldProps): React.ReactElement => {
-  const setField = (value: string) => {
-    setSettings({ [field]: value });
-  };
-
-  const onBlur = (event: FocusEvent<HTMLInputElement>) => {
-    setField(event.target?.value);
-  };
-
-  const onKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key == 'Enter')
-      setField((event.target as HTMLInputElement)?.value);
-  };
-
-  return (
-    <TextField
-      id={`${field}-input`}
-      name={field}
-      {...props}
-      onBlur={onBlur}
-      onKeyUp={onKeyUp}
-    />
-  );
-};
-
-const FIELDS: StringFieldDefinition[] = [
-  { field: 'apiUrl', label: 'Statistics URL' },
-  { field: 'authUrl', label: 'Authentication URL' },
-  { field: 'clientId', label: 'Authentication client ID' },
-  { field: 'title', label: 'Page title' },
+const FIELDS: FieldDefinition[] = [
+  { field: 'apiUrl', label: 'Statistics URL', type: 'string' },
+  { field: 'authUrl', label: 'Authentication URL', type: 'string' },
+  { field: 'clientId', label: 'Authentication client ID', type: 'string' },
+  { field: 'title', label: 'Page title', type: 'string' },
+  { field: 'limit', label: 'Limit', type: 'number' },
+  { field: 'aggregateTo', label: 'Chart resolution', type: 'number' },
+  { field: 'showQueryBar', label: 'Display query bar', type: 'boolean' },
 ];
 
 export interface SettingsProps {
@@ -119,9 +114,18 @@ export const Settings = ({
       .split('&')
       .map((keyValue: string): string[] => keyValue.split('='))
       .filter(([key]: string[]): boolean => keys.includes(key))
-      .reduce((authObj: { [key: string]: string }, [key, value]: string[]) => {
-        authObj[key] = decodeURI(value);
-        return authObj;
+      .reduce((settingsObj: QueryObject, [key, value]: string[]) => {
+        switch (FIELDS.find((i) => i.field === key)?.type) {
+          case 'number':
+            settingsObj[key] = Number(decodeURI(value));
+            break;
+          case 'boolean':
+            settingsObj[key] = decodeURI(value) === 'true';
+            break;
+          default:
+            settingsObj[key] = decodeURI(value);
+        }
+        return settingsObj;
       }, {});
     setSettings(paramSettings as Partial<SettingsState>);
     history.replace('/settings');
@@ -143,17 +147,16 @@ export const Settings = ({
     });
   };
 
-  const copySettingsLink = async (): Promise<any> => {
+  const copySettingsLink = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(getLinkWithCurrentSettings());
+      setMessage({ severity: 'success', message: 'Copied link to clipboard.' });
     } catch (_) {
       setMessage({
         severity: 'error',
         message: 'Copying link to clipboard failed.',
       });
-      return;
     }
-    setMessage({ severity: 'success', message: 'Copied link to clipboard.' });
   };
 
   const getLinkWithCurrentSettings = () => {
@@ -174,23 +177,55 @@ export const Settings = ({
       </Typography>
       <form>
         {FIELDS.map(
-          ({ field, label }): React.ReactElement => (
-            <SettingsStringField
-              key={`${field}:${settings[field]}`}
-              className={classes.settingsField}
-              defaultValue={settings[field] as string}
-              field={field}
-              fullWidth
-              label={label}
-              setSettings={setSettings}
-            />
-          )
+          ({ field, label, type }): React.ReactElement => {
+            switch (type) {
+              default:
+              case 'string':
+                return (
+                  <SettingsStringField
+                    key={`${field}:${settings[field]}`}
+                    className={classes.settingsField}
+                    defaultValue={settings[field] as string}
+                    field={field}
+                    fullWidth
+                    label={label}
+                    setter={setSettings}
+                  />
+                );
+              case 'number':
+                return (
+                  <SettingsNumberField
+                    key={`${field}:${settings[field]}`}
+                    className={classes.settingsField}
+                    defaultValue={settings[field] as number}
+                    field={field}
+                    fullWidth
+                    label={label}
+                    setter={setSettings}
+                  />
+                );
+              case 'boolean':
+                return (
+                  <SetterCheckbox
+                    key={`${field}:${settings[field]}`}
+                    className={classes.settingsField}
+                    checked={settings[field] as boolean}
+                    field={field}
+                    label={label}
+                    setter={setSettings}
+                  />
+                );
+            }
+          }
         )}
         <p>
           Copy <Link href={getLinkWithCurrentSettings()}>link</Link> to current
           settings
           <Tooltip title="Copy to clipboard">
-            <IconButton onClick={copySettingsLink}>
+            <IconButton
+              onClick={copySettingsLink}
+              data-testid="copy-link-button"
+            >
               <FileCopy />
             </IconButton>
           </Tooltip>

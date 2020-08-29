@@ -5,11 +5,15 @@ export interface SettingsState {
   authUrl?: string;
   clientId?: string;
   darkMode: boolean;
+  showQueryBar: boolean;
+  limit?: number;
+  aggregateTo?: number;
   title: string;
 }
 
 const defaultConfig: SettingsState = {
   darkMode: false,
+  showQueryBar: true,
   title: 'fdbk-data-display',
 };
 

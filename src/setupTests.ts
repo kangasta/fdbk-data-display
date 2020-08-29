@@ -23,6 +23,11 @@ console.error = (message: string): void => {
 
 beforeAll(() => {
   window.matchMedia = createMatchMedia(window.innerWidth);
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: () => Promise.resolve(),
+    },
+  });
 });
 
 // Clear mocks for each test
@@ -38,3 +43,8 @@ afterEach(() => {
 export const TEST_ID_NAME = 'Test Dude';
 export const TEST_ID_TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZ2l2ZW5fbmFtZSI6IlRlc3QiLCJmYW1pbHlfbmFtZSI6IkR1ZGUiLCJpYXQiOjE1MTYyMzkwMjJ9.SRHYhnDAuP2qB1dHTo4-aCS8gO5nTpzZKEIKXdtMVdQ';
+
+export const getKeyUpEvent = (value: string, key = 'Enter') => ({
+  key,
+  target: { value },
+});

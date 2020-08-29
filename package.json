@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit",
     "typewatch": "tsc --noEmit --watch",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "test": "CI=true jest src/"
+    "test": "CI=true TZ=UTC jest src/"
   },
   "license": "MIT",
   "dependencies": {
