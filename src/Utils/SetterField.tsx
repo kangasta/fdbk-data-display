@@ -40,14 +40,20 @@ export const SetterField = <ValueT, StateT>({
     setter({ [field]: value });
   };
 
-  const onBlur = (event: FocusEvent<HTMLInputElement>) => {
-    setField(modifier(event.target?.value));
-  };
+  const onBlur =
+    choices === undefined
+      ? (event: FocusEvent<HTMLInputElement>) => {
+          setField(modifier(event.target?.value));
+        }
+      : undefined;
 
-  const onKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key == 'Enter')
-      setField(modifier((event.target as HTMLInputElement)?.value));
-  };
+  const onKeyUp =
+    choices === undefined
+      ? (event: KeyboardEvent<HTMLInputElement>) => {
+          if (event.key == 'Enter')
+            setField(modifier((event.target as HTMLInputElement)?.value));
+        }
+      : undefined;
 
   const onChange =
     choices === undefined
