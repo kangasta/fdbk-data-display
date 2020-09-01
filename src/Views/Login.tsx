@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 
 import { AuthenticationState } from '../Reducers/authentication';
-import { Error } from '../Utils/Error';
+import { Error } from '../Utils/IconMessage';
 import {
   setAuthentication,
   clearAuthentication,
