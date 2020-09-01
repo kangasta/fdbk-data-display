@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Alert } from '@material-ui/lab';
 
 import { StateType } from '../Reducers/main';
-import { Error } from '../Utils/Error';
+import { Error, NoData } from '../Utils/IconMessage';
 import { Page } from '../Utils/Page';
 import { clearAuthentication } from '../Utils/actionCreators';
 import { GettingStarted } from './GettingStarted';
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0,
       // transform: 'scaleY(0)',
       transition: 'all 250ms',
+    },
+    warning: {
+      marginBottom: theme.spacing(1),
     },
   })
 );
@@ -71,6 +75,7 @@ export const Statistics = ({
 }: StatisticsProps): React.ReactElement => {
   const classes = useStyles();
   const [statistics, setStatistics] = useState<StatisticsType>([]);
+  const [warnings, setWarnings] = useState<string[]>([]);
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
 
   useEffect(() => {
@@ -106,6 +111,7 @@ export const Statistics = ({
         }
 
         setStatistics(data.statistics);
+        setWarnings(data.warnings);
         setStatus({});
       } catch (_) {
         setStatus({ error: 'Was not able to fetch data from the server.' });
@@ -154,7 +160,15 @@ export const Statistics = ({
         <CircularProgress color="primary" />
       </div>
       {showQueryBar && <QueryBar />}
-      <Page>{charts}</Page>
+      <Page>
+        {warnings.map((warning) => (
+          <Alert key={warning} className={classes.warning} severity="warning">
+            {warning}
+          </Alert>
+        ))}
+        {statistics.length ? null : <NoData />}
+        {charts}
+      </Page>
     </>
   );
 };

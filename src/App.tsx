@@ -23,7 +23,7 @@ export const App = (): React.ReactElement => {
         <Router basename={process.env.PUBLIC_URL}>
           <View footer={<Footer />}>
             <TopBar />
-            <PageContainer>
+            <PageContainer padding>
               <Switch>
                 <Route path="/login">
                   <Login />
