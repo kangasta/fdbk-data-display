@@ -11,6 +11,11 @@ import mainReducer from '../../Reducers/main';
 import ConnectedStatistics from '../../Views/Statistics';
 import { setAuthentication, setSettings } from '../../Utils/actionCreators';
 
+const WARNINGS_DATA = {
+  warnings: ['Test warning'],
+  statistics: [],
+};
+
 const rejectIn = (milliseconds: number, reason?: any): Promise<any> =>
   new Promise((_, reject) => setTimeout(() => reject(reason), milliseconds));
 
@@ -52,4 +57,27 @@ it('clears authentication on failed fetch', async (): Promise<void> => {
   jest.runAllTimers();
   await findByTestId('error-container');
   expect(store.getState().authentication).toBeNull();
+});
+
+it('renders warnings', async (): Promise<void> => {
+  const fetchSpy = jest
+    .spyOn(window, 'fetch')
+    .mockImplementation(() =>
+      Promise.resolve({ json: () => Promise.resolve(WARNINGS_DATA) } as any)
+    );
+  const store = createStore(mainReducer);
+  store.dispatch(setSettings(settingsState));
+
+  const { findByText } = render(
+    <Provider store={store}>
+      <ThemeProvider theme={testTheme}>
+        <ConnectedStatistics />
+      </ThemeProvider>
+    </Provider>
+  );
+
+  expect(fetchSpy).toHaveBeenCalled();
+
+  await findByText('Test warning');
+  await findByText('No data available');
 });
