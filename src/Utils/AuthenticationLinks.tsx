@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Link } from '@material-ui/core';
 
-export interface LinkProps {
+export interface AuthLinkProps {
   authUrl: string;
   clientId: string;
 }
@@ -22,16 +22,16 @@ export const getLoginUrl = (authUrl: string, clientId: string): string =>
   `${authUrl}/login?client_id=${clientId}&response_type=token&scope=openid&redirect_uri=${getCurrentUrl()}/login`;
 
 export const getLogoutUrl = (authUrl: string, clientId: string): string =>
-  `${authUrl}/logout?client_id=${clientId}&&logout_uri=${getCurrentUrl()}`;
+  `${authUrl}/logout?client_id=${clientId}&logout_uri=${getCurrentUrl()}`;
 
-export const LogIn = ({ authUrl, clientId }: LinkProps) => (
-  <Link color="inherit" href={getLoginUrl(authUrl, clientId)}>
-    Log in
+const getAuthLink = (text: string, href: string): React.ReactElement => (
+  <Link color="inherit" href={href}>
+    {text}
   </Link>
 );
 
-export const LogOut = ({ authUrl, clientId }: LinkProps) => (
-  <Link color="inherit" href={getLogoutUrl(authUrl, clientId)}>
-    Log out
-  </Link>
-);
+export const LogIn = ({ authUrl, clientId }: AuthLinkProps) =>
+  getAuthLink('Log in', getLoginUrl(authUrl, clientId));
+
+export const LogOut = ({ authUrl, clientId }: AuthLinkProps) =>
+  getAuthLink('Log out', getLogoutUrl(authUrl, clientId));

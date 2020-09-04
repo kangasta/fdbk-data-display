@@ -1,7 +1,8 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { createMatchMedia, getKeyUpEvent } from '../setupTests';
+import { createMatchMedia } from '../setupTests';
+import { getKeyUpEvent } from '../Utils/testUtils';
 
 import { App } from '../App';
 

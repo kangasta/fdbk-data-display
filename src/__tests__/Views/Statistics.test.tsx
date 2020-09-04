@@ -1,12 +1,9 @@
 import React from 'react';
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import { render } from '@testing-library/react';
 
-import { TEST_ID_TOKEN } from '../../setupTests';
+import { TEST_ID_TOKEN, TestWrapper } from '../../Utils/testUtils';
 import mainReducer from '../../Reducers/main';
 import ConnectedStatistics from '../../Views/Statistics';
 import { setAuthentication, setSettings } from '../../Utils/actionCreators';
@@ -32,8 +29,6 @@ const authenticationState = {
   token_type: 'Bearer',
 };
 
-const testTheme = createMuiTheme();
-
 it('clears authentication on failed fetch', async (): Promise<void> => {
   const fetchSpy = jest
     .spyOn(window, 'fetch')
@@ -44,11 +39,9 @@ it('clears authentication on failed fetch', async (): Promise<void> => {
   store.dispatch(setSettings(settingsState));
 
   const { findByTestId } = render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <ConnectedStatistics />
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedStatistics />
+    </TestWrapper>
   );
 
   expect(fetchSpy).toHaveBeenCalled();
@@ -69,11 +62,9 @@ it('renders warnings', async (): Promise<void> => {
   store.dispatch(setSettings(settingsState));
 
   const { findByText } = render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <ConnectedStatistics />
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedStatistics />
+    </TestWrapper>
   );
 
   expect(fetchSpy).toHaveBeenCalled();
