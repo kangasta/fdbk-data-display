@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import ChartContainer, { getChartKey } from '../Components/ChartContainer';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { Alert } from '@material-ui/lab';
 
 import { StateType } from '../Reducers/main';
 import { Error, NoData } from '../Utils/IconMessage';
@@ -15,6 +14,7 @@ import { GettingStarted } from './GettingStarted';
 import QueryBar from '../Components/QueryBar';
 import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
+import { Warnings } from '../Utils/Warnings';
 
 const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {
@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0,
       // transform: 'scaleY(0)',
       transition: 'all 250ms',
-    },
-    warning: {
-      marginBottom: theme.spacing(1),
     },
   })
 );
@@ -161,11 +158,7 @@ export const Statistics = ({
       </div>
       {showQueryBar && <QueryBar />}
       <Page>
-        {warnings.map((warning) => (
-          <Alert key={warning} className={classes.warning} severity="warning">
-            {warning}
-          </Alert>
-        ))}
+        <Warnings warnings={warnings} />
         {statistics.length ? null : <NoData />}
         {charts}
       </Page>
