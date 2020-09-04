@@ -17,8 +17,8 @@ export const getDownQuery = (width: widthParam) => (theme: Theme) =>
 
 const darkTheme = createMuiTheme({
   palette: {
-    primary: deepPurple,
-    secondary: deepOrange,
+    primary: { main: deepPurple[300] },
+    secondary: { main: deepOrange[300] },
     type: 'dark',
   },
 });
