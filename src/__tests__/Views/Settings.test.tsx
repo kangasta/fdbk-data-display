@@ -1,18 +1,12 @@
 import React from 'react';
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
 import { act } from 'react-dom/test-utils';
-
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { render, fireEvent } from '@testing-library/react';
 
-import { getKeyUpEvent } from '../../setupTests';
+import { getKeyUpEvent, TestWrapper } from '../../Utils/testUtils';
 import mainReducer from '../../Reducers/main';
 import ConnectedSettings from '../../Views/Settings';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-
-const testTheme = createMuiTheme();
 
 interface ValueType {
   label: string;
@@ -37,15 +31,9 @@ it('parsers query string on page load and stores settings in redux state', async
   window.history.pushState(null, 'title', `http://localhost${URL}`);
 
   render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <Router>
-          <Route>
-            <ConnectedSettings />
-          </Route>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedSettings />
+    </TestWrapper>
   );
 
   expect(store.getState().settings.apiUrl).toEqual(DATA.apiUrl.value);
@@ -61,15 +49,9 @@ it('allows sharing link to current settings', async (): Promise<void> => {
   const clipboardSpy = jest.spyOn(navigator.clipboard, 'writeText');
 
   const { container, findByLabelText, findByTestId } = render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <Router>
-          <Route>
-            <ConnectedSettings />
-          </Route>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedSettings />
+    </TestWrapper>
   );
 
   const values = Object.values(DATA);

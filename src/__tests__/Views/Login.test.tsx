@@ -1,24 +1,17 @@
 import React from 'react';
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-
 import { render } from '@testing-library/react';
 
-import { TEST_ID_TOKEN } from '../../setupTests';
+import { TEST_ID_TOKEN, TestWrapper } from '../../Utils/testUtils';
 import mainReducer from '../../Reducers/main';
 import ConnectedLogin from '../../Views/Login';
 import { setSettings } from '../../Utils/actionCreators';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const settingsState = {
   apiUrl: 'http://api',
   authUrl: 'http://auth',
   clientId: 'asd',
 };
-
-const testTheme = createMuiTheme();
 
 it('stores login details on page load and clears them when they expire', async (): Promise<
   void
@@ -33,15 +26,9 @@ it('stores login details on page load and clears them when they expire', async (
   );
 
   render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <Router>
-          <Route>
-            <ConnectedLogin />
-          </Route>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedLogin />
+    </TestWrapper>
   );
 
   expect(store.getState().authentication?.id_token).toEqual(TEST_ID_TOKEN);
@@ -57,15 +44,9 @@ it('shows error if url does not contain tokens', async (): Promise<void> => {
   window.history.pushState(null, 'title', `http://localhost/login`);
 
   const { container, findByTestId } = render(
-    <Provider store={store}>
-      <ThemeProvider theme={testTheme}>
-        <Router>
-          <Route>
-            <ConnectedLogin />
-          </Route>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <TestWrapper store={store}>
+      <ConnectedLogin />
+    </TestWrapper>
   );
 
   findByTestId('error-container');

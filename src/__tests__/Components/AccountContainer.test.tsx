@@ -1,25 +1,25 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-import { TEST_ID_NAME, TEST_ID_TOKEN } from '../../setupTests';
+import {
+  TEST_ID_NAME,
+  TEST_ID_TOKEN,
+  TestWrapper,
+} from '../../Utils/testUtils';
 import { AccountContainer } from '../../Components/AccountContainer';
-
-const testTheme = createMuiTheme();
 
 describe('AccountContainer', (): void => {
   it('displays users name when user is logged in (given_name family_name)', async (): Promise<
     void
   > => {
     const { container, findByText, findByTestId } = render(
-      <ThemeProvider theme={testTheme}>
+      <TestWrapper>
         <AccountContainer
           authUrl="http://auth"
           clientId="id"
           idToken={TEST_ID_TOKEN}
         />
-      </ThemeProvider>
+      </TestWrapper>
     );
 
     expect(container.textContent).toContain(TEST_ID_NAME);
@@ -28,9 +28,9 @@ describe('AccountContainer', (): void => {
   });
   it('displays log in link when no active logins', (): void => {
     const { queryByText } = render(
-      <ThemeProvider theme={testTheme}>
+      <TestWrapper>
         <AccountContainer authUrl="http://auth" clientId="id" />
-      </ThemeProvider>
+      </TestWrapper>
     );
 
     expect(queryByText('Log in')).toBeInTheDocument();
