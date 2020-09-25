@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import ChartContainer, { getChartKey } from '../Components/ChartContainer';
+import { ChartContainer, getChartKey } from '../Components/ChartContainer';
+import { TableContainer, getTableKey } from '../Components/TableContainer';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
@@ -15,6 +16,7 @@ import QueryBar from '../Components/QueryBar';
 import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
 import { Warnings } from '../Utils/Warnings';
+import { Table } from '../Types/Statistics';
 
 const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {
@@ -48,6 +50,15 @@ export interface StatusType {
   error?: string;
   loading?: string;
 }
+
+const chart = (i: any): React.ReactElement => (
+  <ChartContainer key={getChartKey(i.payload)} {...i.payload} />
+);
+const table = (i: Table): React.ReactElement => (
+  <TableContainer key={getTableKey(i.payload)} {...i.payload} />
+);
+type statisticsType = 'chart' | 'table';
+const statisticMap = { chart, table };
 
 export interface StatisticsProps {
   aggregateTo?: number;
@@ -143,9 +154,9 @@ export const Statistics = ({
     return <Error>{status.error}</Error>;
   }
 
-  const charts = statistics
-    .filter((i) => i.type === 'chart')
-    .map((i) => <ChartContainer key={getChartKey(i.payload)} {...i.payload} />);
+  const statisticContainers = statistics
+    .filter((i) => Object.keys(statisticMap).includes(i.type))
+    .map((i) => statisticMap[i.type as statisticsType](i));
 
   const loadingClasses = `${classes.center} ${
     status?.loading ? classes.showLoading : classes.hideLoading
@@ -160,7 +171,7 @@ export const Statistics = ({
       <Page>
         <Warnings warnings={warnings} />
         {statistics.length ? null : <NoData />}
-        {charts}
+        {statisticContainers}
       </Page>
     </>
   );

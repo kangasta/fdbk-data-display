@@ -10,33 +10,19 @@ import {
 } from 'chart.js';
 import 'chartjs-plugin-colorschemes';
 
-import { Typography, useMediaQuery } from '@material-ui/core';
-import {
-  Theme,
-  makeStyles,
-  createStyles,
-  useTheme,
-} from '@material-ui/core/styles';
+import { useMediaQuery } from '@material-ui/core';
+import { Theme, useTheme } from '@material-ui/core/styles';
 
 import { getDownQuery } from '../Utils/ThemeWrapper';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    title: {
-      marginBottom: theme.spacing(3),
-    },
-    container: {
-      position: 'relative',
-      marginBottom: theme.spacing(6),
-    },
-  })
-);
+import { StatisticContainer } from '../Utils/StatisticContainer';
 
 const getChartColors = (theme: Theme): string[] => [
   theme.palette.info.main,
   theme.palette.error.main,
   theme.palette.success.main,
   theme.palette.warning.main,
+  theme.palette.primary.main,
+  theme.palette.secondary.main,
 ];
 
 const getAspectRatio = (downSm: boolean, downXs: boolean): number => {
@@ -141,9 +127,6 @@ export const getChartKey = ({
   type: string;
 }): string => `${field}-${type}`;
 
-const capitalize = (str: string): string =>
-  str.charAt(0).toUpperCase() + str.slice(1);
-
 export interface ChartContainerProps {
   field: string;
   type: ChartType;
@@ -156,16 +139,12 @@ export const ChartContainer = ({
   data,
 }: ChartContainerProps): React.ReactElement => {
   const theme = useTheme();
-  const classes = useStyles();
 
   const downSm = useMediaQuery(getDownQuery('sm'));
   const downXs = useMediaQuery(getDownQuery('xs'));
 
   return (
-    <div className={classes.container}>
-      <Typography className={classes.title} variant="h5" component="h2">
-        {capitalize(field)}
-      </Typography>
+    <StatisticContainer title={field}>
       <Chart
         key={`${getChartKey({ field, type })}-${getAspectRatio(
           downSm,
@@ -175,8 +154,6 @@ export const ChartContainer = ({
         type={type}
         options={getChartOptions(type, theme, getAspectRatio(downSm, downXs))}
       />
-    </div>
+    </StatisticContainer>
   );
 };
-
-export default ChartContainer;

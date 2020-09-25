@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/maintainability)](https://codeclimate.com/github/kangasta/fdbk-data-display/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/test_coverage)](https://codeclimate.com/github/kangasta/fdbk-data-display/test_coverage)
 
-Demo project for a blog post.
+React app to display data provided by an API in [fdbk](https://github.com/kangasta/fdbk.git) statistics format. See `fdbk/examples/net_status` for an example.
 
 ## Development
 
@@ -46,3 +46,13 @@ npm run build
 echo 'PUBLIC_URL="/${path}/#/"' > .env
 npm run build -- --public-url /${path}/
 ```
+
+### Interface Types
+
+The fdbk interfaces are defined by JSONSchema documents in [fdbk](https://github.com/kangasta/fdbk.git) repository and converted to TypeScript definitions with [json-schema-to-typescript](https://www.npmjs.com/package/json-schema-to-typescript). For example to create statistics types, cd into fdbk repository root and run:
+
+```bash
+json2ts fdbk/schemas/statistics-out.json > Statistics.ts
+```
+
+Replace the file in [src/Types](./src/Types) with produced file.
