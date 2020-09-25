@@ -14,6 +14,8 @@ import { Tooltip, TooltipProps } from '@material-ui/core';
 import { ListPayload, Status, Value } from '../Types/Statistics';
 import { capitalize } from './StatisticContainer';
 
+type Element = ListPayload['data'][number];
+
 interface StatusDetails {
   Icon: SvgIconComponent;
   getColor: (theme: Theme) => string;
@@ -85,27 +87,60 @@ const getValue = ({ payload }: Value, decimals = 2): string => {
   return String(roundTo(numeric, decimals));
 };
 
+export const getElementTitle = (
+  element: Element,
+  singleCellValues: boolean
+): string => {
+  if (singleCellValues) {
+    return element.payload.field;
+  }
+
+  if (element.type == 'status') {
+    return `${element.payload.field} (status)`;
+  }
+
+  return `${element.payload.field} (${element.payload.type})`;
+};
+
 export interface TableValueProps {
   value: Value;
   decimals: number;
+  singleCellValues: boolean;
 }
-export const TableValue = ({ value, decimals=2 }: TableValueProps): React.ReactElement => (
+export const TableValue = ({
+  value,
+  decimals,
+  singleCellValues,
+}: TableValueProps): React.ReactElement => (
   <>
     <ValueSpan>{getValue(value, decimals)} </ValueSpan>
     {value.payload.unit && <UnitSpan>{String(value.payload.unit)} </UnitSpan>}
+    {singleCellValues && value.payload.type !== 'latest' && (
+      <UnitSpan>{String(`(${value.payload.type})`)} </UnitSpan>
+    )}
   </>
 );
 
-type Element = ListPayload['data'][number];
 export const getValueKey = ({ payload }: Element): string =>
   `${payload.topic_name}-${payload.field}-${payload.type}-value`;
 export const getStatusKey = ({ payload }: Element): string =>
   `${payload.topic_name}-${payload.field}-status`;
-export const getTableElement = (element: Element, decimals=2): React.ReactNode => {
+export const getTableElement = (
+  element: Element,
+  decimals = 2,
+  singleCellValues = true
+): React.ReactNode => {
   switch (element.type) {
     case 'status':
       return <TableStatus key={getStatusKey(element)} status={element} />;
     case 'value':
-      return <TableValue key={getValueKey(element)} value={element} decimals={decimals} />;
+      return (
+        <TableValue
+          key={getValueKey(element)}
+          value={element}
+          decimals={decimals}
+          singleCellValues={singleCellValues}
+        />
+      );
   }
 };

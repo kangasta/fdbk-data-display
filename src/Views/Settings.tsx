@@ -82,6 +82,16 @@ const FIELDS: FieldDefinition[] = [
   { field: 'limit', label: 'Limit', type: 'number' },
   { field: 'aggregateTo', label: 'Chart resolution', type: 'number' },
   { field: 'showQueryBar', label: 'Display query bar', type: 'boolean' },
+  {
+    field: 'tableDecimals',
+    label: 'Number of decimals in tables',
+    type: 'number',
+  },
+  {
+    field: 'tableSingleCellValues',
+    label: 'Show aggregated values of a label in single table cell',
+    type: 'boolean',
+  },
 ];
 
 export interface SettingsProps {
