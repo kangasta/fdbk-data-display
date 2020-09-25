@@ -1,83 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Typography } from '@material-ui/core';
 
-import { ChartData } from 'chart.js';
-import ChartContainer from '../Components/ChartContainer';
-
 import { Page } from '../Utils/Page';
-
-const LABELS = ['Blue', 'Red', 'Green', 'Orange'];
-const UPDATE_INTERVAL = 10e3;
-
-const getDoughnutData = (data: number[]): ChartData => ({
-  datasets: [
-    {
-      data,
-    },
-  ],
-  labels: LABELS,
-});
-
-type TimePoint = { x: string; y: number };
-const getLineData = (data: TimePoint[][]): ChartData => ({
-  datasets: data.map((data, i) => ({
-    data: data.slice(-15),
-    label: LABELS[i],
-  })),
-});
-
-const getRandomNumbers = (N: number, max = 10): number[] =>
-  [...Array(N)].map(() => Math.random() * max);
-const getRandomNumberWithTimestamp = (
-  time = Date.now(),
-  max = 10
-): { x: string; y: number } => ({
-  x: new Date(time).toISOString(),
-  y: Math.random() * max,
-});
-
-const DemoCharts = (): React.ReactElement => {
-  const [doughnutValues, setDoughnutValues] = useState<number[]>(
-    getRandomNumbers(4)
-  );
-  const [lineValues, setLineValues] = useState<TimePoint[][]>([[], [], [], []]);
-
-  useEffect(() => {
-    const randomizeDoughnut = () => setDoughnutValues(getRandomNumbers(4));
-    const addLineData = (time = Date.now()) =>
-      setLineValues((data) =>
-        data.map((values) => [...values, getRandomNumberWithTimestamp(time)])
-      );
-
-    for (let i = -10; i <= 0; i++) {
-      addLineData(Date.now() + i * UPDATE_INTERVAL);
-    }
-
-    const doughnutInterval = setInterval(randomizeDoughnut, UPDATE_INTERVAL);
-    const lineInterval = setInterval(addLineData, UPDATE_INTERVAL);
-
-    return () => {
-      clearInterval(doughnutInterval);
-      clearInterval(lineInterval);
-    };
-  }, [setDoughnutValues, setLineValues]);
-
-  return (
-    <>
-      <ChartContainer
-        field="Pie chart"
-        type="doughnut"
-        data={getDoughnutData(doughnutValues)}
-      />
-      <ChartContainer
-        field="Line chart"
-        type="line"
-        data={getLineData(lineValues)}
-      />
-    </>
-  );
-};
+import { DemoCharts, DemoTable} from '../Utils/Demo';
 
 export const GettingStarted = (): React.ReactElement => (
   <Page>
@@ -101,5 +27,6 @@ export const GettingStarted = (): React.ReactElement => (
     </p>
     <p>If you are here to see the demo charts, kick back and relax.</p>
     <DemoCharts />
+    <DemoTable />
   </Page>
 );
