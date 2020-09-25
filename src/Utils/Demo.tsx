@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ChartData } from 'chart.js';
 
 import { ChartContainer } from '../Components/ChartContainer';
-import { TableContainer } from '../Components/TableContainer';
+import TableContainer from '../Components/TableContainer';
 import { ListPayload, TablePayload } from '../Types/Statistics';
 
 const LABELS = ['Blue', 'Red', 'Green', 'Orange'];
@@ -78,43 +78,60 @@ export const DemoCharts = (): React.ReactElement => {
   );
 };
 
-export const getDemoTablePayload = (statuses: string[], offset=0): TablePayload => ({
+export const getDemoTablePayload = (
+  statuses: string[],
+  offset = 0
+): TablePayload => ({
   data: statuses.map(
     (name: string, i: number): ListPayload => ({
-    data: [
-      {
-      payload: {
-        field: 'status',
-        status: name,
-        topic_name: name,
-      },
-      type: 'status',
-      },
-      {
-      payload: {
-        field: 'value',
-        topic_name: name,
-        type: 'latest',
-        unit: 'unit',
-        value: 'value',
-      },
-      type: 'value',
-      },
-      {
-      payload: {
-        field: 'numeric_value',
-        topic_name: name,
-        type: 'latest',
-        value: i + offset,
-      },
-      type: 'value',
-      },
-    ],
-    name,
+      data: [
+        {
+          payload: {
+            field: 'status',
+            status: name,
+            topic_name: name,
+          },
+          type: 'status',
+        },
+        {
+          payload: {
+            field: 'value',
+            topic_name: name,
+            type: 'latest',
+            unit: 'unit',
+            value: 'value',
+          },
+          type: 'value',
+        },
+        {
+          payload: {
+            field: 'numeric_value',
+            topic_name: name,
+            type: 'latest',
+            value: i + offset,
+          },
+          type: 'value',
+        },
+        {
+          payload: {
+            field: 'numeric_value',
+            topic_name: name,
+            type: 'average',
+            value: i + offset,
+          },
+          type: 'value',
+        },
+      ],
+      name,
     })
   ),
   name: 'Table',
-  });
-export const DemoTablePayload = getDemoTablePayload(['Success', 'Warning', 'Error', 'Info', 'Unknown status']);
+});
+export const DemoTablePayload = getDemoTablePayload(
+  ['Success', 'Warning', 'Error', 'Info', 'Unknown status'],
+  0.123456789
+);
 
-export const DemoTable = (): React.ReactElement => <TableContainer {...DemoTablePayload} />;
+export const DemoTable = (): React.ReactElement => (
+  <TableContainer {...DemoTablePayload} />
+);

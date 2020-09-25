@@ -9,12 +9,16 @@ export interface SettingsState {
   limit?: number;
   aggregateTo?: number;
   title: string;
+  tableDecimals?: number;
+  tableSingleCellValues?: boolean;
 }
 
 const defaultConfig: SettingsState = {
   darkMode: false,
   showQueryBar: true,
   title: 'fdbk-data-display',
+  tableDecimals: 2,
+  tableSingleCellValues: true,
 };
 
 const savedConfigString = window.localStorage.getItem(SETTINGS_KEY);

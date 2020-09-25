@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
   Table,
@@ -10,56 +11,78 @@ import {
 
 import { StatisticContainer, capitalize } from '../Utils/StatisticContainer';
 import { ListPayload, TablePayload } from '../Types/Statistics';
-import { getTableElement } from '../Utils/CollectionElements';
+import { getElementTitle, getTableElement } from '../Utils/CollectionElements';
+import { StateType } from '../Reducers/main';
 
 export const getTableKey = ({ name }: TablePayload): string => `${name}-table`;
 
-const getTableTitles = (row: ListPayload): string[] => [
-  ...new Set(row.data.map((i) => i.payload.field)),
+const getTableTitles = (
+  row: ListPayload,
+  singleCellValues = true
+): string[] => [
+  ...new Set(row.data.map((i) => getElementTitle(i, singleCellValues))),
   'Name',
 ];
 
-const getTableRow = (row: ListPayload, decimals=2): React.ReactNode => {
+const getTableRow = (
+  row: ListPayload,
+  decimals = 2,
+  singleCellValues = true
+): React.ReactNode => {
   const columnsMap: { [key: string]: React.ReactNode[] } = {
-    Name: [<span key="Name">{row.name}</span>],
+    Name: [<span key="Name">{capitalize(row.name)}</span>],
   };
 
   row.data.forEach((i) => {
-    if (!Object.keys(columnsMap).includes(i.payload.field)) {
-      columnsMap[i.payload.field] = [getTableElement(i, decimals)];
+    const column = getElementTitle(i, singleCellValues);
+    if (!Object.keys(columnsMap).includes(column)) {
+      columnsMap[column] = [getTableElement(i, decimals, singleCellValues)];
     } else {
-      columnsMap[i.payload.field].push(getTableElement(i, decimals));
+      columnsMap[column].push(getTableElement(i, decimals, singleCellValues));
     }
   });
 
   return (
     <TableRow key={row.name}>
-      {getTableTitles(row).map((i) => (
+      {getTableTitles(row, singleCellValues).map((i) => (
         <TableCell key={i}>{columnsMap[i]}</TableCell>
       ))}
     </TableRow>
   );
 };
 
-export interface TableContainerProps extends Pick<TablePayload, 'name' | 'data'> {
-  decimals?: number
+export interface TableContainerProps {
+  name: string;
+  data: TablePayload['data'];
+  decimals?: number;
+  singleCellValues?: boolean;
 }
 
 export const TableContainer = ({
   name,
   data,
-  decimals=2,
+  decimals = 2,
+  singleCellValues,
 }: TableContainerProps): React.ReactElement => (
   <StatisticContainer title={name}>
     <Table>
       <TableHead>
         <TableRow>
-          {getTableTitles(data[0]).map((i) => (
+          {getTableTitles(data[0], singleCellValues).map((i) => (
             <TableCell key={i}>{capitalize(i)}</TableCell>
           ))}
         </TableRow>
       </TableHead>
-      <TableBody>{data.map((i) => getTableRow(i, decimals))}</TableBody>
+      <TableBody>
+        {data.map((i) => getTableRow(i, decimals, singleCellValues))}
+      </TableBody>
     </Table>
   </StatisticContainer>
 );
+
+const mapStateToProps = ({ settings }: StateType) => ({
+  singleCellValues: settings.tableSingleCellValues,
+  decimals: settings.tableDecimals,
+});
+
+export default connect(mapStateToProps)(TableContainer);

@@ -3,7 +3,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { ChartContainer, getChartKey } from '../Components/ChartContainer';
-import { TableContainer, getTableKey } from '../Components/TableContainer';
+import TableContainer, { getTableKey } from '../Components/TableContainer';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
