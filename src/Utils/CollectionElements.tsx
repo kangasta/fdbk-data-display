@@ -9,7 +9,13 @@ import {
   Help,
   SvgIconComponent,
 } from '@material-ui/icons';
-import { Tooltip, TooltipProps } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+  TooltipProps,
+} from '@material-ui/core';
 
 import { ListPayload, Status, Value } from '../Types/Statistics';
 import { capitalize } from './StatisticContainer';
@@ -144,3 +150,38 @@ export const getTableElement = (
       );
   }
 };
+
+export const getElementKey = (element: Element) => {
+  switch (element.type) {
+    case 'status':
+      return getStatusKey(element);
+    case 'value':
+      return getValueKey(element);
+  }
+};
+export const getListElement = (
+  element: Element,
+  decimals = 2
+): React.ReactElement => (
+  <ListItem key={getElementKey(element)}>
+    {element.type === 'status' && (
+      <ListItemIcon>
+        <TableStatus status={element} />
+      </ListItemIcon>
+    )}
+    <ListItemText
+      primary={
+        element.type === 'status' ? (
+          capitalize(element.payload.status)
+        ) : (
+          <TableValue
+            value={element}
+            decimals={decimals}
+            singleCellValues={false}
+          />
+        )
+      }
+      secondary={capitalize(getElementTitle(element, false))}
+    />
+  </ListItem>
+);

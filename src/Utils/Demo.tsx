@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ChartData } from 'chart.js';
 
 import { ChartContainer } from '../Components/ChartContainer';
+import ListContainer from '../Components/ListContainer';
 import TableContainer from '../Components/TableContainer';
 import { ListPayload, TablePayload } from '../Types/Statistics';
 
@@ -77,6 +78,42 @@ export const DemoCharts = (): React.ReactElement => {
     </>
   );
 };
+
+export const DemoListPayload: ListPayload = {
+  data: [
+    {
+      payload: {
+        field: 'status',
+        status: 'SUCCESS',
+        topic_name: 'Example',
+      },
+      type: 'status',
+    },
+    {
+      payload: {
+        field: 'numeric_value',
+        topic_name: 'Example',
+        type: 'min',
+        value: 1.23456789,
+      },
+      type: 'value',
+    },
+    {
+      payload: {
+        field: 'numeric_value',
+        topic_name: 'Example',
+        type: 'max',
+        value: 9.87654321,
+      },
+      type: 'value',
+    },
+  ],
+  name: 'List',
+};
+
+export const DemoList = (): React.ReactElement => (
+  <ListContainer {...DemoListPayload} />
+);
 
 export const getDemoTablePayload = (
   statuses: string[],
