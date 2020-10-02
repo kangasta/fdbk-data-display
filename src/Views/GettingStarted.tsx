@@ -3,7 +3,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 
 import { Page } from '../Utils/Page';
-import { DemoCharts, DemoTable } from '../Utils/Demo';
+import { DemoCharts, DemoList, DemoTable } from '../Utils/Demo';
 
 export const GettingStarted = (): React.ReactElement => (
   <Page>
@@ -27,6 +27,7 @@ export const GettingStarted = (): React.ReactElement => (
     </p>
     <p>If you are here to see the demo charts, kick back and relax.</p>
     <DemoCharts />
+    <DemoList />
     <DemoTable />
   </Page>
 );
