@@ -18,6 +18,7 @@ import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
 import { Warnings } from '../Utils/Warnings';
 import { List, Table } from '../Types/Statistics';
+import { useAuthorizationHeader } from '../Utils/authHeaderHook';
 
 const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {
@@ -67,28 +68,26 @@ const statisticMap = { chart, list, table };
 export interface StatisticsProps {
   aggregateTo?: number;
   apiUrl?: string;
-  idToken?: string;
   limit?: number;
   query: QueryState;
   showQueryBar: boolean;
-  tokenType?: string;
   clearAuthentication: () => void;
 }
 
 export const Statistics = ({
   aggregateTo,
   apiUrl,
-  idToken,
   limit,
   query,
   showQueryBar,
-  tokenType,
   clearAuthentication,
 }: StatisticsProps): React.ReactElement => {
   const classes = useStyles();
   const [statistics, setStatistics] = useState<StatisticsType>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
+
+  const headers = useAuthorizationHeader();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,13 +97,6 @@ export const Statistics = ({
       }
 
       try {
-        const headers =
-          tokenType && idToken
-            ? {
-                Authorization: `${tokenType} ${idToken}`,
-              }
-            : undefined;
-
         setStatus(LOADING_STATUS);
         const url = showQueryBar
           ? withQueryString(apiUrl, query, { aggregate_to: aggregateTo, limit })
@@ -133,13 +125,12 @@ export const Statistics = ({
     fetchData();
   }, [
     apiUrl,
-    tokenType,
-    idToken,
     query,
     clearAuthentication,
     aggregateTo,
     limit,
     showQueryBar,
+    headers,
   ]);
 
   if (status?.loading && !statistics.length) {
@@ -181,14 +172,12 @@ export const Statistics = ({
   );
 };
 
-const mapStateToProps = ({ authentication, query, settings }: StateType) => ({
+const mapStateToProps = ({ query, settings }: StateType) => ({
   aggregateTo: settings.aggregateTo,
   apiUrl: settings.apiUrl,
-  idToken: authentication?.id_token,
   limit: settings.limit,
   showQueryBar: settings.showQueryBar,
   query,
-  tokenType: authentication?.token_type,
 });
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators({ clearAuthentication }, dispatch);

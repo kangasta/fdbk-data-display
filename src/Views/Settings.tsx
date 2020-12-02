@@ -25,7 +25,7 @@ import { setSettings } from '../Utils/actionCreators';
 import {
   SetterField,
   SetterFieldOwnProps,
-  SetterCheckbox,
+  SetterSwitch,
 } from '../Utils/SetterField';
 import { QueryObject } from '../Utils/queryUtils';
 
@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'right',
     },
     title: {
+      marginBottom: theme.spacing(3),
+    },
+    subtitle: {
+      margintop: theme.spacing(3),
       marginBottom: theme.spacing(3),
     },
     settingsField: {
@@ -68,31 +72,47 @@ const SettingsNumberField = (
   />
 );
 
+type FieldType = keyof SettingsState;
 interface FieldDefinition {
-  field: keyof SettingsState;
+  field: FieldType;
   label: string;
   type: 'string' | 'number' | 'boolean';
 }
 
-const FIELDS: FieldDefinition[] = [
-  { field: 'apiUrl', label: 'Statistics URL', type: 'string' },
-  { field: 'authUrl', label: 'Authentication URL', type: 'string' },
-  { field: 'clientId', label: 'Authentication client ID', type: 'string' },
-  { field: 'title', label: 'Page title', type: 'string' },
-  { field: 'limit', label: 'Limit', type: 'number' },
-  { field: 'aggregateTo', label: 'Chart resolution', type: 'number' },
-  { field: 'showQueryBar', label: 'Display query bar', type: 'boolean' },
-  {
-    field: 'tableDecimals',
-    label: 'Number of decimals in tables',
-    type: 'number',
-  },
-  {
-    field: 'tableSingleCellValues',
-    label: 'Show aggregated values of a label in single table cell',
-    type: 'boolean',
-  },
-];
+interface Form {
+  [key: string]: FieldDefinition[];
+}
+
+const FORM: Form = {
+  API: [
+    { field: 'apiUrl', label: 'Statistics URL', type: 'string' },
+    { field: 'limit', label: 'Limit', type: 'number' },
+    { field: 'aggregateTo', label: 'Chart resolution', type: 'number' },
+  ],
+  Authentication: [
+    { field: 'requireAuth', label: 'Require authentication', type: 'boolean' },
+    { field: 'authUrl', label: 'Authentication URL', type: 'string' },
+    { field: 'clientId', label: 'Authentication client ID', type: 'string' },
+  ],
+  Appearance: [
+    { field: 'title', label: 'Page title', type: 'string' },
+    {
+      field: 'tableDecimals',
+      label: 'Number of decimals in tables',
+      type: 'number',
+    },
+    {
+      field: 'tableSingleCellValues',
+      label: 'Show aggregated values of a label in single table cell',
+      type: 'boolean',
+    },
+    { field: 'showQueryBar', label: 'Display query bar', type: 'boolean' },
+  ],
+};
+
+const FIELDS: FieldDefinition[] = Object.values(FORM).reduce((prev, curr) =>
+  prev.concat(curr)
+);
 
 export interface SettingsProps {
   settings: SettingsState;
@@ -186,48 +206,59 @@ export const Settings = ({
         Settings
       </Typography>
       <form>
-        {FIELDS.map(
-          ({ field, label, type }): React.ReactElement => {
-            switch (type) {
-              default:
-              case 'string':
-                return (
-                  <SettingsStringField
-                    key={`${field}:${settings[field]}`}
-                    className={classes.settingsField}
-                    defaultValue={settings[field] as string}
-                    field={field}
-                    fullWidth
-                    label={label}
-                    setter={setSettings}
-                  />
-                );
-              case 'number':
-                return (
-                  <SettingsNumberField
-                    key={`${field}:${settings[field]}`}
-                    className={classes.settingsField}
-                    defaultValue={settings[field] as number}
-                    field={field}
-                    fullWidth
-                    label={label}
-                    setter={setSettings}
-                  />
-                );
-              case 'boolean':
-                return (
-                  <SetterCheckbox
-                    key={`${field}:${settings[field]}`}
-                    className={classes.settingsField}
-                    checked={settings[field] as boolean}
-                    field={field}
-                    label={label}
-                    setter={setSettings}
-                  />
-                );
-            }
-          }
-        )}
+        {Object.keys(FORM).map((key) => (
+          <React.Fragment key={key}>
+            <Typography
+              className={classes.subtitle}
+              component="h3"
+              variant="h6"
+            >
+              {key}
+            </Typography>
+            {FORM[key].map(
+              ({ type, field, label }): React.ReactElement => {
+                switch (type) {
+                  default:
+                  case 'string':
+                    return (
+                      <SettingsStringField
+                        key={`${field}:${settings[field]}`}
+                        className={classes.settingsField}
+                        defaultValue={settings[field] as string}
+                        field={field}
+                        fullWidth
+                        label={label}
+                        setter={setSettings}
+                      />
+                    );
+                  case 'number':
+                    return (
+                      <SettingsNumberField
+                        key={`${field}:${settings[field]}`}
+                        className={classes.settingsField}
+                        defaultValue={settings[field] as number}
+                        field={field}
+                        fullWidth
+                        label={label}
+                        setter={setSettings}
+                      />
+                    );
+                  case 'boolean':
+                    return (
+                      <SetterSwitch
+                        key={`${field}:${settings[field]}`}
+                        className={classes.settingsField}
+                        checked={settings[field] as boolean}
+                        field={field}
+                        label={label}
+                        setter={setSettings}
+                      />
+                    );
+                }
+              }
+            )}
+          </React.Fragment>
+        ))}
         <p>
           Copy <Link href={getLinkWithCurrentSettings()}>link</Link> to current
           settings

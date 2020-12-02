@@ -1,12 +1,13 @@
 import React, { FocusEvent, KeyboardEvent, ChangeEvent } from 'react';
 
 import {
-  Checkbox,
   TextField,
   TextFieldProps,
   MenuItem,
   FormControlLabelProps,
   FormControlLabel,
+  Switch,
+  FormControl,
 } from '@material-ui/core';
 
 export type ChoiceType = { label: string; value: string };
@@ -81,22 +82,22 @@ export const SetterField = <ValueT, StateT>({
   );
 };
 
-export interface SetterCheckboxOwnProps<StateT> {
+export interface SetterSwitchOwnProps<StateT> {
   field: keyof StateT;
   label: string;
   checked?: boolean;
   setter: (state: { [key: string]: boolean }) => void;
 }
 
-export type SetterCheckboxProps<StateT> = SetterCheckboxOwnProps<StateT> &
+export type SetterSwitchProps<StateT> = SetterSwitchOwnProps<StateT> &
   Partial<FormControlLabelProps>;
 
-export const SetterCheckbox = <StateT,>({
+export const SetterSwitch = <StateT,>({
   field,
   setter,
   checked,
   ...props
-}: SetterCheckboxProps<StateT>): React.ReactElement => {
+}: SetterSwitchProps<StateT>): React.ReactElement => {
   const setField = (value: boolean) => {
     setter({ [field]: value });
   };
@@ -106,16 +107,18 @@ export const SetterCheckbox = <StateT,>({
   };
 
   return (
-    <FormControlLabel
-      {...props}
-      control={
-        <Checkbox
-          id={`${field}-input`}
-          checked={checked}
-          color="primary"
-          onChange={onChange}
-        />
-      }
-    />
+    <FormControl fullWidth>
+      <FormControlLabel
+        {...props}
+        control={
+          <Switch
+            id={`${field}-input`}
+            checked={checked}
+            color="primary"
+            onChange={onChange}
+          />
+        }
+      />
+    </FormControl>
   );
 };

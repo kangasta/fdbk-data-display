@@ -1,6 +1,7 @@
 export const SETTINGS_KEY = 'settings';
 
 export interface SettingsState {
+  requireAuth: boolean;
   apiUrl?: string;
   authUrl?: string;
   clientId?: string;
@@ -14,6 +15,7 @@ export interface SettingsState {
 }
 
 const defaultConfig: SettingsState = {
+  requireAuth: false,
   darkMode: false,
   showQueryBar: true,
   title: 'fdbk-data-display',
