@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 
 import { TEST_ID_TOKEN, TestWrapper } from '../../Utils/testUtils';
 import mainReducer from '../../Reducers/main';
@@ -28,6 +28,22 @@ const authenticationState = {
   expires_in: 3600,
   token_type: 'Bearer',
 };
+
+const { location } = window;
+
+beforeAll((): void => {
+  Object.defineProperty(window, 'location', {
+    writable: true,
+    value: {
+      ...location,
+      replace: jest.fn(),
+    },
+  });
+});
+
+afterAll((): void => {
+  window.location = location;
+});
 
 it('clears authentication on failed fetch', async (): Promise<void> => {
   const fetchSpy = jest
@@ -71,4 +87,31 @@ it('renders warnings', async (): Promise<void> => {
 
   await findByText('Test warning');
   await findByText('No data available');
+});
+
+it('redirects un-authenticated user to auth url if specified', async (): Promise<
+  void
+> => {
+  const replaceResult = Promise.resolve();
+  const replaceSpy = jest
+    .spyOn(window.location, 'replace')
+    .mockReturnValue(replaceResult as any);
+
+  const store = createStore(mainReducer);
+  store.dispatch(
+    setSettings({
+      ...settingsState,
+      requireAuth: true,
+    })
+  );
+
+  render(
+    <TestWrapper store={store}>
+      <ConnectedStatistics />
+    </TestWrapper>
+  );
+
+  await act(() => replaceResult);
+
+  expect(replaceSpy).toHaveBeenCalled();
 });
