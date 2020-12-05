@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 
 import { act, render } from '@testing-library/react';
 
-import { TEST_ID_TOKEN, TestWrapper } from '../../Utils/testUtils';
+import { AUTHENTICATION_STATE, TestWrapper } from '../../Utils/testUtils';
 import mainReducer from '../../Reducers/main';
 import ConnectedStatistics from '../../Views/Statistics';
 import { setAuthentication, setSettings } from '../../Utils/actionCreators';
@@ -20,13 +20,6 @@ const settingsState = {
   apiUrl: 'http://api',
   authUrl: 'http://auth',
   clientId: 'asd',
-};
-
-const authenticationState = {
-  id_token: TEST_ID_TOKEN,
-  access_token: 'ACCESS_TOKEN',
-  expires_in: 3600,
-  token_type: 'Bearer',
 };
 
 const { location } = window;
@@ -51,7 +44,7 @@ it('clears authentication on failed fetch', async (): Promise<void> => {
     .mockImplementation(() => rejectIn(2500));
 
   const store = createStore(mainReducer);
-  store.dispatch(setAuthentication(authenticationState));
+  store.dispatch(setAuthentication(AUTHENTICATION_STATE));
   store.dispatch(setSettings(settingsState));
 
   const { findByTestId } = render(

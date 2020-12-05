@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { StateType } from '../Reducers/main';
@@ -22,8 +23,15 @@ export const useAuthorizationHeader = (): Headers | undefined => {
     (state) => state.settings.clientId
   );
 
+  const authHeader = useMemo(
+    () => ({
+      Authorization: `${tokenType} ${token}`,
+    }),
+    [tokenType, token]
+  );
+
   if (token && tokenType) {
-    return { Authorization: `${tokenType} ${token}` };
+    return authHeader;
   }
 
   if (requireAuth && authUrl && clientId) {
