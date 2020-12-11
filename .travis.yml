@@ -1,6 +1,8 @@
 language: node_js
 node_js:
 - lts/*
+services:
+- docker
 addons:
   code_climate:
     repo_token: $CODECLIMATE_TOKEN
@@ -8,6 +10,8 @@ addons:
 script:
 - npm run lint
 - npm test -- --coverage --verbose
+- docker-compose build
+- docker-compose up --exit-code-from test
 - echo 'PUBLIC_URL="/fdbk-data-display/"' > .env
 - echo "COMMIT=\"${TRAVIS_COMMIT}\"" >> .env
 - echo "TAG=\"${TRAVIS_TAG}\"" >> .env
