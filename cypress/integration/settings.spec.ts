@@ -19,7 +19,7 @@ const setApiUrl = (save=false) => {
 
 context('Settings', (): void => {
   before((): void => {
-    cy.visit('http://localhost:3000');
+    cy.visit(Cypress.env('TARGET') || 'http://localhost:3000');
   });
 
   it('allows saving settings to local storage', (): void => {

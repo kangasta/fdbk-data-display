@@ -1,0 +1,10 @@
+version: "3.4"
+services:
+  app:
+    build: .
+  test:
+    build:
+      context: .
+      dockerfile: cypress.Dockerfile
+    environment:
+      CYPRESS_TARGET: http://app
