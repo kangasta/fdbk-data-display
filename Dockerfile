@@ -4,7 +4,7 @@ RUN apk add git
 WORKDIR /app
 
 COPY ./package* /app/
-RUN npm i
+RUN npm ci
 
 COPY . /app
 RUN export TAG=$(git name-rev --tags --name-only $(git rev-parse HEAD)) && \

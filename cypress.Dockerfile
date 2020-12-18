@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app
 RUN apt-get update && \
     apt-get install -y chromium && \
-    npm i
+    npm ci
 
 ENTRYPOINT ["./node_modules/.bin/cypress", "run"]
 CMD ["--browser", "chromium"]
