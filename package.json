@@ -60,7 +60,7 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "jest": "^26.4.0",
     "jest-fetch-mock": "^3.0.3",
-    "parcel": "^2.0.0-beta.1",
+    "parcel": "^2.0.0-nightly.481",
     "prettier": "^2.0.5",
     "typescript": "^3.9.7"
   }
