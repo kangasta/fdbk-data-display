@@ -9,9 +9,7 @@ import {
 import { AccountContainer } from '../../Components/AccountContainer';
 
 describe('AccountContainer', (): void => {
-  it('displays users name when user is logged in (given_name family_name)', async (): Promise<
-    void
-  > => {
+  it('displays users name when user is logged in (given_name family_name)', async (): Promise<void> => {
     const { container, findByText, findByTestId } = render(
       <TestWrapper>
         <AccountContainer

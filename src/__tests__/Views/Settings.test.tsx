@@ -23,9 +23,7 @@ const URL = `/settings?apiUrl=${encodeURI(String(DATA.apiUrl.value))}&title=${
   DATA.title.value
 }&limit=${DATA.limit.value}&showQueryBar=${DATA.showQueryBar.value}`;
 
-it('parsers query string on page load and stores settings in redux state', async (): Promise<
-  void
-> => {
+it('parsers query string on page load and stores settings in redux state', async (): Promise<void> => {
   const store = createStore(mainReducer);
 
   window.history.pushState(null, 'title', `http://localhost${URL}`);

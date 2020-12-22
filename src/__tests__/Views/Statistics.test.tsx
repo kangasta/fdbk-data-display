@@ -82,9 +82,7 @@ it('renders warnings', async (): Promise<void> => {
   await findByText('No data available');
 });
 
-it('redirects un-authenticated user to auth url if specified', async (): Promise<
-  void
-> => {
+it('redirects un-authenticated user to auth url if specified', async (): Promise<void> => {
   const replaceResult = Promise.resolve();
   const replaceSpy = jest
     .spyOn(window.location, 'replace')
