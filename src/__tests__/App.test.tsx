@@ -64,7 +64,10 @@ it('allows configuring API URL and shows error message on invalid response from 
   expect(errorContainer.textContent).toContain(
     'No statistics data in the response'
   );
-  expect(fetchSpy).toHaveBeenCalledWith(testApi, expect.anything());
+  expect(fetchSpy).toHaveBeenCalledWith(
+    `${testApi}overview`,
+    expect.anything()
+  );
 });
 
 it('allows setting page title in settings', async (): Promise<void> => {
