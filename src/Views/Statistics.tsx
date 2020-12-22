@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { bindActionCreators, Dispatch } from 'redux';
+import React, { useMemo } from 'react';
 import { connect } from 'react-redux';
 
 import { ChartContainer, getChartKey } from '../Components/ChartContainer';
@@ -11,19 +10,13 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { StateType } from '../Reducers/main';
 import { Error, NoData } from '../Utils/IconMessage';
 import { Page } from '../Utils/Page';
-import { clearAuthentication } from '../Utils/actionCreators';
 import { GettingStarted } from './GettingStarted';
 import QueryBar from '../Components/QueryBar';
 import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
 import { Warnings } from '../Utils/Warnings';
 import { List, Table } from '../Types/Statistics';
-import { useAuthorizationHeader } from '../Utils/useAuthorizationHeader';
-
-const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
-const LOADING_STATUS = {
-  loading: 'Loading statistics',
-};
+import { useApi, API_NOT_CONFIGURED } from '../Utils/useApi';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,10 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export type StatisticsType = any[];
-export interface StatusType {
-  error?: string;
-  loading?: string;
-}
 
 const chart = (i: any): React.ReactElement => (
   <ChartContainer key={getChartKey(i.payload)} {...i.payload} />
@@ -65,73 +54,40 @@ const table = (i: Table): React.ReactElement => (
 type statisticsType = 'chart' | 'list' | 'table';
 const statisticMap = { chart, list, table };
 
+const checkDataHasStatistics = (data: any): string | null =>
+  data.statistics ? null : 'No statistics data in the response from server.';
+const statisticsChecks = [checkDataHasStatistics];
+
 export interface StatisticsProps {
   aggregateTo?: number;
-  apiUrl?: string;
   limit?: number;
   query: QueryState;
   showQueryBar: boolean;
-  clearAuthentication: () => void;
 }
 
 export const Statistics = ({
   aggregateTo,
-  apiUrl,
   limit,
   query,
   showQueryBar,
-  clearAuthentication,
 }: StatisticsProps): React.ReactElement => {
   const classes = useStyles();
-  const [statistics, setStatistics] = useState<StatisticsType>([]);
-  const [warnings, setWarnings] = useState<string[]>([]);
-  const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
 
-  const headers = useAuthorizationHeader();
+  // Path might contain timestamps, which will change on every re-render
+  const path = useMemo(
+    () =>
+      showQueryBar
+        ? withQueryString('/overview', query, {
+            aggregate_to: aggregateTo,
+            limit,
+          })
+        : '/overview',
+    [showQueryBar, query, aggregateTo, limit]
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!apiUrl) {
-        setStatus({ error: API_NOT_CONFIGURED });
-        return;
-      }
-
-      try {
-        setStatus(LOADING_STATUS);
-        const url = showQueryBar
-          ? withQueryString(apiUrl, query, { aggregate_to: aggregateTo, limit })
-          : apiUrl;
-        const response = await fetch(url, {
-          headers,
-          mode: 'cors',
-        });
-        const data = await response.json();
-
-        if (!data.statistics) {
-          setStatus({
-            error: 'No statistics data in the response from server.',
-          });
-          return;
-        }
-
-        setStatistics(data.statistics);
-        setWarnings(data.warnings);
-        setStatus({});
-      } catch (_) {
-        setStatus({ error: 'Was not able to fetch data from the server.' });
-        clearAuthentication();
-      }
-    };
-    fetchData();
-  }, [
-    apiUrl,
-    query,
-    clearAuthentication,
-    aggregateTo,
-    limit,
-    showQueryBar,
-    headers,
-  ]);
+  const [data, status] = useApi(path, statisticsChecks);
+  const statistics: StatisticsType = data?.statistics ?? [];
+  const warnings: string[] = data?.warnings ?? [];
 
   if (status?.loading && !statistics.length) {
     return (
@@ -174,12 +130,9 @@ export const Statistics = ({
 
 const mapStateToProps = ({ query, settings }: StateType) => ({
   aggregateTo: settings.aggregateTo,
-  apiUrl: settings.apiUrl,
   limit: settings.limit,
   showQueryBar: settings.showQueryBar,
   query,
 });
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ clearAuthentication }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Statistics);
+export default connect(mapStateToProps)(Statistics);

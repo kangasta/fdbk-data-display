@@ -73,3 +73,7 @@ export const withQueryString = (
   newUrl = addQueryString(newUrl, queryString);
   return newUrl;
 };
+
+export const joinPaths = (a: string, b: string): string => {
+  return `${a.replace(/\/+$/, '')}/${b.replace(/^\/+/, '')}`;
+};
