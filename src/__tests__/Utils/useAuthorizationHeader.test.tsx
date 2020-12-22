@@ -3,7 +3,10 @@ import { createStore } from 'redux';
 import { render } from '@testing-library/react';
 
 import { AUTHENTICATION_STATE, TestWrapper } from '../../Utils/testUtils';
-import { useAuthorizationHeader, Headers } from '../../Utils/authHeaderHook';
+import {
+  useAuthorizationHeader,
+  Headers,
+} from '../../Utils/useAuthorizationHeader';
 import mainReducer from '../../Reducers/main';
 import { setAuthentication } from '../../Utils/actionCreators';
 

@@ -13,9 +13,7 @@ const settingsState = {
   clientId: 'asd',
 };
 
-it('stores login details on page load and clears them when they expire', async (): Promise<
-  void
-> => {
+it('stores login details on page load and clears them when they expire', async (): Promise<void> => {
   const store = createStore(mainReducer);
   store.dispatch(setSettings(settingsState));
 

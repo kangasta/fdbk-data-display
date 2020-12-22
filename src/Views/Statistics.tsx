@@ -18,7 +18,7 @@ import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
 import { Warnings } from '../Utils/Warnings';
 import { List, Table } from '../Types/Statistics';
-import { useAuthorizationHeader } from '../Utils/authHeaderHook';
+import { useAuthorizationHeader } from '../Utils/useAuthorizationHeader';
 
 const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
 const LOADING_STATUS = {

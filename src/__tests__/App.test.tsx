@@ -41,16 +41,12 @@ it('has darkmode toggle', async (): Promise<void> => {
   expect(document.body).toHaveStyle('background-color: #fafafa');
 });
 
-it('shows getting started page when API URL is not configured', async (): Promise<
-  void
-> => {
+it('shows getting started page when API URL is not configured', async (): Promise<void> => {
   const { findByText } = render(<App />);
   await findByText('Getting started');
 });
 
-it('allows configuring API URL and shows error message on invalid response from API', async (): Promise<
-  void
-> => {
+it('allows configuring API URL and shows error message on invalid response from API', async (): Promise<void> => {
   const fetchSpy = jest
     .spyOn(window, 'fetch')
     .mockReturnValue(getInvalidResponse());
@@ -89,9 +85,7 @@ it('allows setting page title in settings', async (): Promise<void> => {
   expect(container.textContent).not.toContain(testTitle);
 });
 
-it('hides menu items in speed dial on small screens', async (): Promise<
-  void
-> => {
+it('hides menu items in speed dial on small screens', async (): Promise<void> => {
   window.matchMedia = createMatchMedia(500);
   const { findByTestId } = render(<App />);
 
