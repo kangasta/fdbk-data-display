@@ -4,41 +4,17 @@ import { connect } from 'react-redux';
 import { ChartContainer, getChartKey } from '../Components/ChartContainer';
 import TableContainer, { getTableKey } from '../Components/TableContainer';
 import ListContainer, { getListKey } from '../Components/ListContainer';
-import { Backdrop, CircularProgress } from '@material-ui/core';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { StateType } from '../Reducers/main';
-import { Error, NoData } from '../Utils/IconMessage';
+import { NoData } from '../Utils/IconMessage';
 import { Page } from '../Utils/Page';
-import { GettingStarted } from './GettingStarted';
 import QueryBar from '../Components/QueryBar';
 import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
 import { Warnings } from '../Utils/Warnings';
 import { List, Table } from '../Types/Statistics';
-import { useApi, API_NOT_CONFIGURED } from '../Utils/useApi';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    center: {
-      textAlign: 'center',
-    },
-    showLoading: {
-      marginTop: theme.spacing(3),
-      maxHeight: '100px',
-      opacity: 1,
-      // transform: 'scaleY(1)',
-      transition: 'all 250ms',
-    },
-    hideLoading: {
-      marginTop: 0,
-      maxHeight: 0,
-      opacity: 0,
-      // transform: 'scaleY(0)',
-      transition: 'all 250ms',
-    },
-  })
-);
+import { useApi } from '../Utils/useApi';
+import { ViewWrapper } from '../Utils/View';
 
 export type StatisticsType = any[];
 
@@ -71,8 +47,6 @@ export const Statistics = ({
   query,
   showQueryBar,
 }: StatisticsProps): React.ReactElement => {
-  const classes = useStyles();
-
   // Path might contain timestamps, which will change on every re-render
   const path = useMemo(
     () =>
@@ -89,42 +63,28 @@ export const Statistics = ({
   const statistics: StatisticsType = data?.statistics ?? [];
   const warnings: string[] = data?.warnings ?? [];
 
-  if (status?.loading && !statistics.length) {
-    return (
-      <Backdrop open invisible>
-        <CircularProgress color="primary" />
-      </Backdrop>
-    );
-  }
-
-  if (status?.error === API_NOT_CONFIGURED) {
-    return <GettingStarted />;
-  }
-
-  if (status?.error) {
-    return <Error>{status.error}</Error>;
-  }
-
   const statisticContainers = statistics
     .filter((i) => Object.keys(statisticMap).includes(i.type))
     .map((i) => statisticMap[i.type as statisticsType](i));
 
-  const loadingClasses = `${classes.center} ${
-    status?.loading ? classes.showLoading : classes.hideLoading
-  }`;
+  const breadcrumbs = [
+    { target: '/', label: 'Home', disable: true },
+    { target: '/', label: 'Overview' },
+  ];
 
   return (
-    <>
-      <div className={loadingClasses}>
-        <CircularProgress color="primary" />
-      </div>
+    <ViewWrapper
+      status={status}
+      hasData={Boolean(statistics.length)}
+      breadcrumbs={breadcrumbs}
+    >
       {showQueryBar && <QueryBar />}
       <Page>
         <Warnings warnings={warnings} />
         {statistics.length ? null : <NoData />}
         {statisticContainers}
       </Page>
-    </>
+    </ViewWrapper>
   );
 };
 

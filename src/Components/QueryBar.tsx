@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
     field: {
       minWidth: '20ch',
       marginLeft: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: 0,
+      },
     },
   })
 );

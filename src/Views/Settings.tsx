@@ -28,6 +28,7 @@ import {
   SetterSwitch,
 } from '../Utils/SetterField';
 import { QueryObject } from '../Utils/queryUtils';
+import { ViewWrapper } from '../Utils/View';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -200,103 +201,113 @@ export const Settings = ({
     return `${getCurrentUrl()}/settings?${query}`;
   };
 
+  const breadcrumbs = [
+    { target: '/', label: 'Home' },
+    { target: '/settings', label: 'Settings' },
+  ];
+
   return (
-    <Page>
-      <Typography className={classes.title} component="h2" variant="h5">
-        Settings
-      </Typography>
-      <form>
-        {Object.keys(FORM).map((key) => (
-          <React.Fragment key={key}>
-            <Typography
-              className={classes.subtitle}
-              component="h3"
-              variant="h6"
-            >
-              {key}
-            </Typography>
-            {FORM[key].map(
-              ({ type, field, label }): React.ReactElement => {
-                switch (type) {
-                  default:
-                  case 'string':
-                    return (
-                      <SettingsStringField
-                        key={`${field}:${settings[field]}`}
-                        className={classes.settingsField}
-                        defaultValue={settings[field] as string}
-                        field={field}
-                        fullWidth
-                        label={label}
-                        setter={setSettings}
-                      />
-                    );
-                  case 'number':
-                    return (
-                      <SettingsNumberField
-                        key={`${field}:${settings[field]}`}
-                        className={classes.settingsField}
-                        defaultValue={settings[field] as number}
-                        field={field}
-                        fullWidth
-                        label={label}
-                        setter={setSettings}
-                      />
-                    );
-                  case 'boolean':
-                    return (
-                      <SetterSwitch
-                        key={`${field}:${settings[field]}`}
-                        className={classes.settingsField}
-                        checked={settings[field] as boolean}
-                        field={field}
-                        label={label}
-                        setter={setSettings}
-                      />
-                    );
+    <ViewWrapper breadcrumbs={breadcrumbs}>
+      <Page>
+        <Typography className={classes.title} component="h2" variant="h5">
+          Settings
+        </Typography>
+        <form>
+          {Object.keys(FORM).map((key) => (
+            <React.Fragment key={key}>
+              <Typography
+                className={classes.subtitle}
+                component="h3"
+                variant="h6"
+              >
+                {key}
+              </Typography>
+              {FORM[key].map(
+                ({ type, field, label }): React.ReactElement => {
+                  switch (type) {
+                    default:
+                    case 'string':
+                      return (
+                        <SettingsStringField
+                          key={`${field}:${settings[field]}`}
+                          className={classes.settingsField}
+                          defaultValue={settings[field] as string}
+                          field={field}
+                          fullWidth
+                          label={label}
+                          setter={setSettings}
+                        />
+                      );
+                    case 'number':
+                      return (
+                        <SettingsNumberField
+                          key={`${field}:${settings[field]}`}
+                          className={classes.settingsField}
+                          defaultValue={settings[field] as number}
+                          field={field}
+                          fullWidth
+                          label={label}
+                          setter={setSettings}
+                        />
+                      );
+                    case 'boolean':
+                      return (
+                        <SetterSwitch
+                          key={`${field}:${settings[field]}`}
+                          className={classes.settingsField}
+                          checked={settings[field] as boolean}
+                          field={field}
+                          label={label}
+                          setter={setSettings}
+                        />
+                      );
+                  }
                 }
-              }
-            )}
-          </React.Fragment>
-        ))}
-        <p>
-          Copy <Link href={getLinkWithCurrentSettings()}>link</Link> to current
-          settings
-          <Tooltip title="Copy to clipboard">
-            <IconButton
-              onClick={copySettingsLink}
-              data-testid="copy-link-button"
+              )}
+            </React.Fragment>
+          ))}
+          <p>
+            Copy <Link href={getLinkWithCurrentSettings()}>link</Link> to
+            current settings
+            <Tooltip title="Copy to clipboard">
+              <IconButton
+                onClick={copySettingsLink}
+                data-testid="copy-link-button"
+              >
+                <FileCopy />
+              </IconButton>
+            </Tooltip>
+          </p>
+          <div className={classes.buttonContainer}>
+            <Button
+              className={classes.button}
+              onClick={() => history.push('/')}
             >
-              <FileCopy />
-            </IconButton>
-          </Tooltip>
-        </p>
-        <div className={classes.buttonContainer}>
-          <Button className={classes.button} onClick={() => history.push('/')}>
-            Done
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            onClick={saveToLocalStorage}
-          >
-            Save to local storage
-          </Button>
-        </div>
-      </form>
-      {/* <code>{JSON.stringify(settings, null, 2)}</code> */}
-      <Snackbar
-        open={Boolean(message)}
-        autoHideDuration={2500}
-        onClose={clearMessage}
-      >
-        {message && (
-          <Alert onClose={clearMessage} severity={message.severity}>
-            {message.message}
-          </Alert>
-        )}
-      </Snackbar>
-    </Page>
+              Done
+            </Button>
+            <Button
+              className={classes.button}
+              color="primary"
+              onClick={saveToLocalStorage}
+            >
+              Save to local storage
+            </Button>
+          </div>
+        </form>
+        {/* <code>{JSON.stringify(settings, null, 2)}</code> */}
+        <Snackbar
+          open={Boolean(message)}
+          autoHideDuration={2500}
+          onClose={clearMessage}
+        >
+          {message && (
+            <Alert onClose={clearMessage} severity={message.severity}>
+              {message.message}
+            </Alert>
+          )}
+        </Snackbar>
+      </Page>
+    </ViewWrapper>
   );
 };
 
