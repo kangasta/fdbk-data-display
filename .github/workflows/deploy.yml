@@ -17,8 +17,7 @@ jobs:
     - name: Build static file bundle
       run: |
         echo 'PUBLIC_URL="/fdbk-data-display/"' > .env
-        echo "COMMIT=\"${TRAVIS_COMMIT}\"" >> .env
-        echo "TAG=\"${TRAVIS_TAG}\"" >> .env
+        echo "COMMIT=\"${GITHUB_SHA}\"" >> .env
         npm run build -- --public-url /fdbk-data-display/
         cp dist/index.html dist/404.html
     - name: Deploy to pages
