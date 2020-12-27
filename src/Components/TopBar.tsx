@@ -127,7 +127,7 @@ export const TopBar = ({
         <PageContainer>
           <Toolbar disableGutters={downXs}>
             {showMenuToggle && (
-              <Tooltip title={'Open menu'}>
+              <Tooltip title={'Open side drawer'}>
                 <IconButton
                   color="inherit"
                   edge="start"

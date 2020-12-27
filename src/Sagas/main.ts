@@ -40,7 +40,7 @@ export function* fetchTopics(): any {
     const response = yield call(fetch, joinPaths(apiUrl, 'topics'), {
       headers,
     });
-    const topics = yield response.json();
+    const topics = yield call([response, 'json']);
     yield put(updateTopics(topics, {}));
   } catch (_) {
     yield put(updateTopics(undefined, { error: API_FETCH_FAILED }));
