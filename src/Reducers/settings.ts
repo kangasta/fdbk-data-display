@@ -3,6 +3,7 @@ export const SETTINGS_KEY = 'settings';
 export interface SettingsState {
   requireAuth: boolean;
   apiUrl?: string;
+  fullApi: boolean;
   authUrl?: string;
   clientId?: string;
   darkMode: boolean;
@@ -15,6 +16,7 @@ export interface SettingsState {
 }
 
 const defaultConfig: SettingsState = {
+  fullApi: false,
   requireAuth: false,
   darkMode: false,
   showQueryBar: true,

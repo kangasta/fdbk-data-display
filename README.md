@@ -53,6 +53,7 @@ The fdbk interfaces are defined by JSONSchema documents in [fdbk](https://github
 
 ```bash
 json2ts fdbk/schemas/statistics-out.json > Statistics.ts
+json2ts fdbk/schemas/topic.json > Topic.ts
 ```
 
 Replace the file in [src/Types](./src/Types) with produced file.

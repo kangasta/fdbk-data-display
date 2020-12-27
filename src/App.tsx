@@ -1,6 +1,7 @@
 import React from 'react';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -12,9 +13,15 @@ import Settings from './Views/Settings';
 import Statistics from './Views/Statistics';
 import { Footer } from './Utils/Footer';
 import { PageContainer } from './Utils/Page';
+import SideDrawer from './Components/SideDrawer';
 import { View } from './Utils/View';
+import { mainSaga } from './Sagas/main';
+import Topics from './Views/Topics';
 
-const store = createStore(mainReducer);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(mainReducer, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(mainSaga);
 
 export const App = (): React.ReactElement => {
   return (
@@ -23,6 +30,7 @@ export const App = (): React.ReactElement => {
         <Router basename={process.env.PUBLIC_URL}>
           <View footer={<Footer />}>
             <TopBar />
+            <SideDrawer />
             <PageContainer padding>
               <Switch>
                 <Route path="/login">
@@ -30,6 +38,12 @@ export const App = (): React.ReactElement => {
                 </Route>
                 <Route path="/settings">
                   <Settings />
+                </Route>
+                <Route path="/topics/:id">
+                  <Topics />
+                </Route>
+                <Route path="/topics">
+                  <Topics />
                 </Route>
                 <Route path="/">
                   <Statistics />

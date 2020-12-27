@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 
 import { ListPayload, Status, Value } from '../Types/Statistics';
-import { capitalize } from './StatisticContainer';
+import { capitalize } from './Page';
 
 type Element = ListPayload['data'][number];
 

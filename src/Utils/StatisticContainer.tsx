@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Typography } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+
+import { Title } from './Page';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,14 +10,8 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       marginBottom: theme.spacing(6),
     },
-    title: {
-      marginBottom: theme.spacing(3),
-    },
   })
 );
-
-export const capitalize = (str: string): string =>
-  str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ').toLowerCase();
 
 export interface StatisticContainerProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,11 +27,7 @@ export const StatisticContainer = ({
 
   return (
     <div className={`${classes.container} ${className}`}>
-      {title && (
-        <Typography className={classes.title} variant="h5" component="h2">
-          {capitalize(title)}
-        </Typography>
-      )}
+      {title && <Title capitalizeTitle>{title}</Title>}
       {children}
     </div>
   );

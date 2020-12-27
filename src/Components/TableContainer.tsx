@@ -9,7 +9,8 @@ import {
   TableRow,
 } from '@material-ui/core';
 
-import { StatisticContainer, capitalize } from '../Utils/StatisticContainer';
+import { StatisticContainer } from '../Utils/StatisticContainer';
+import { capitalize } from '../Utils/Page';
 import { ListPayload, TablePayload } from '../Types/Statistics';
 import { getElementTitle, getTableElement } from '../Utils/CollectionElements';
 import { StateType } from '../Reducers/main';

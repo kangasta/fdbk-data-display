@@ -5,6 +5,7 @@ import {
   useMediaQuery,
   ContainerProps,
   Container,
+  Typography,
 } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { getDownQuery } from './ThemeWrapper';
@@ -23,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
     pageContainer: {
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(6),
+    },
+    title: {
+      marginBottom: theme.spacing(3),
     },
   })
 );
@@ -69,5 +73,26 @@ export const PageContainer = ({
     >
       {children}
     </Container>
+  );
+};
+
+export const capitalize = (str: string): string =>
+  str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ').toLowerCase();
+
+export interface TitleProps {
+  children: string;
+  capitalizeTitle?: boolean;
+}
+
+export const Title = ({
+  children,
+  capitalizeTitle,
+}: TitleProps): React.ReactElement => {
+  const classes = useStyles();
+
+  return (
+    <Typography className={classes.title} variant="h5" component="h2">
+      {capitalizeTitle ? capitalize(children) : children}
+    </Typography>
   );
 };

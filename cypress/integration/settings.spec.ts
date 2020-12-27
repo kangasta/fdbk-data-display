@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 /// <reference types="@testing-library/cypress" />
 
+const API_UNREACHABLE = 'Was not able to fetch data from the API.';
+
 const setApiUrl = (save = false) => {
   cy.findAllByTestId('settings-view-toggle-button').click();
 
@@ -22,15 +24,15 @@ context('Settings', (): void => {
     cy.contains('Getting started');
 
     setApiUrl();
-    cy.contains('Was not able to fetch data from the server.');
+    cy.contains(API_UNREACHABLE);
 
     cy.reload();
     cy.contains('Getting started');
 
     setApiUrl(true);
-    cy.contains('Was not able to fetch data from the server.');
+    cy.contains(API_UNREACHABLE);
 
     cy.reload();
-    cy.contains('Was not able to fetch data from the server.');
+    cy.contains(API_UNREACHABLE);
   });
 });
