@@ -13,12 +13,12 @@ import {
   Hidden,
   Backdrop,
 } from '@material-ui/core';
-import { InvertColors, Settings, GitHub, Home } from '@material-ui/icons';
+import { InvertColors, Settings, GitHub, Home, Menu } from '@material-ui/icons';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { StateType } from '../Reducers/main';
-import { setDarkMode } from '../Utils/actionCreators';
+import { setDarkMode, setShowSideDrawer } from '../Utils/actionCreators';
 import AccountContainer from './AccountContainer';
 import { PageContainer } from '../Utils/Page';
 import { getDownQuery } from '../Utils/ThemeWrapper';
@@ -60,15 +60,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface TopBarProps {
   darkMode: boolean;
+  showMenuToggle: boolean;
   hasAuthentication: boolean;
   title: string;
+  setShowSideDrawer: (showSideDrawer: boolean) => void;
   setDarkMode: (darkMode: boolean) => void;
 }
 
 export const TopBar = ({
   darkMode,
+  showMenuToggle,
   hasAuthentication,
   title,
+  setShowSideDrawer,
   setDarkMode,
 }: TopBarProps) => {
   const classes = useStyles();
@@ -122,6 +126,17 @@ export const TopBar = ({
       <AppBar className={classes.appBar} position="static">
         <PageContainer>
           <Toolbar disableGutters={downXs}>
+            {showMenuToggle && (
+              <Tooltip title={'Open menu'}>
+                <IconButton
+                  color="inherit"
+                  edge="start"
+                  onClick={() => setShowSideDrawer(true)}
+                >
+                  <Menu />
+                </IconButton>
+              </Tooltip>
+            )}
             <Typography
               className={classes.title}
               component="h1"
@@ -181,10 +196,11 @@ export const TopBar = ({
 
 const mapStateToProps = (state: StateType) => ({
   darkMode: state.settings.darkMode,
+  showMenuToggle: state.settings.fullApi,
   hasAuthentication: Boolean(state.settings.authUrl && state.settings.clientId),
   title: state.settings.title,
 });
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ setDarkMode }, dispatch);
+  bindActionCreators({ setDarkMode, setShowSideDrawer }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

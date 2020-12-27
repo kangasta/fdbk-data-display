@@ -7,6 +7,7 @@ import { joinPaths } from './queryUtils';
 import { useAuthorizationHeader } from './useAuthorizationHeader';
 
 export const API_NOT_CONFIGURED = 'API not configured. Can not load data.';
+export const API_FETCH_FAILED = 'Was not able to fetch data from the API.';
 export const LOADING_STATUS = {
   loading: 'Loading data from API.',
 };
@@ -64,7 +65,7 @@ export function useApi<DataType = unknown>(
         setData(responseData);
         setStatus({});
       } catch (_) {
-        setStatus({ error: 'Was not able to fetch data from the server.' });
+        setStatus({ error: API_FETCH_FAILED });
         dispatch(clearAuthentication());
       }
     };

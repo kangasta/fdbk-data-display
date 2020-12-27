@@ -5,6 +5,14 @@ import { StateType } from '../Reducers/main';
 import { getLoginUrl } from './AuthenticationLinks';
 
 export type Headers = { [key: string]: string };
+
+export const getAuthHeader = (tokenType?: string, token?: string): Headers =>
+  tokenType && token
+    ? {
+        Authorization: `${tokenType} ${token}`,
+      }
+    : {};
+
 export const useAuthorizationHeader = (): Headers | undefined => {
   const token = useSelector<StateType, string | undefined>(
     (state) => state.authentication?.id_token
@@ -23,12 +31,10 @@ export const useAuthorizationHeader = (): Headers | undefined => {
     (state) => state.settings.clientId
   );
 
-  const authHeader = useMemo(
-    () => ({
-      Authorization: `${tokenType} ${token}`,
-    }),
-    [tokenType, token]
-  );
+  const authHeader = useMemo(() => getAuthHeader(tokenType, token), [
+    tokenType,
+    token,
+  ]);
 
   if (token && tokenType) {
     return authHeader;

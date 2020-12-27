@@ -87,6 +87,11 @@ interface Form {
 const FORM: Form = {
   API: [
     { field: 'apiUrl', label: 'Statistics URL', type: 'string' },
+    {
+      field: 'fullApi',
+      label: 'Statistics URL implements full fdbk API',
+      type: 'boolean',
+    },
     { field: 'limit', label: 'Limit', type: 'number' },
     { field: 'aggregateTo', label: 'Chart resolution', type: 'number' },
   ],
