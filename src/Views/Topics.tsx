@@ -7,20 +7,20 @@ import {
   AccordionActions,
   AccordionDetails,
   AccordionSummary,
+  Hidden,
   IconButton,
   Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { ExpandMore, FormatListNumbered } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
 import { Page, Title, capitalize } from '../Utils/Page';
 import { ViewWrapper } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
-
 import { Topic } from '../Types/Topic';
-import { ExpandMore, FormatListNumbered } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,6 +71,7 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
   const classes = useStyles();
   const history = useHistory();
   const { id: expanded } = useParams<{ id?: string }>();
+
   const getOnChange = (id: string) => () =>
     expanded === id
       ? history.replace('/topics')
@@ -118,9 +119,16 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
               <Typography className={classes.primary}>
                 {capitalize(name)}
               </Typography>
-              <Typography className={classes.secondary}>{id}</Typography>
+              <Hidden smDown>
+                <Typography className={classes.secondary}>{id}</Typography>
+              </Hidden>
             </AccordionSummary>
             <AccordionDetails className={classes.content}>
+              <Hidden mdUp>
+                <Detail title="ID">
+                  <div>{id}</div>
+                </Detail>
+              </Hidden>
               {detailFields.map(
                 (key) =>
                   other[key] && (
