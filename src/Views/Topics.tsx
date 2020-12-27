@@ -113,6 +113,7 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
             <AccordionSummary
               className={classes.header}
               expandIcon={<ExpandMore />}
+              data-testid={`topics-accordion-summary-${id}`}
             >
               <Typography className={classes.primary}>
                 {capitalize(name)}
