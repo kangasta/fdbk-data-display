@@ -23,7 +23,7 @@ export type CheckType<DataType = unknown> = (
 
 export function useApi<DataType = unknown>(
   path: string,
-  checks: CheckType<DataType>[] = []
+  checks?: CheckType<DataType>[]
 ): [DataType | undefined, StatusType] {
   const [data, setData] = useState<DataType>();
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
@@ -50,7 +50,7 @@ export function useApi<DataType = unknown>(
         });
         const responseData = await response.json();
 
-        const hasErrors = checks.some((check) => {
+        const hasErrors = checks?.some((check) => {
           const error = check(responseData);
           if (error) {
             setStatus({ error });

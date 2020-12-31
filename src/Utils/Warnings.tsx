@@ -16,6 +16,26 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+export type WarningProps = AlertProps;
+
+export const Warning = ({ children, ...props }: WarningProps) => {
+  const classes = useStyles();
+  const theme = useTheme();
+
+  const variant = theme.palette.type === 'dark' ? 'outlined' : 'standard';
+
+  return (
+    <Alert
+      className={classes.warning}
+      severity="warning"
+      variant={variant}
+      {...props}
+    >
+      {children}
+    </Alert>
+  );
+};
+
 export interface WarningsProps extends Partial<AlertProps> {
   warnings?: string[];
 }
@@ -23,25 +43,12 @@ export interface WarningsProps extends Partial<AlertProps> {
 export const Warnings = ({
   warnings = [],
   ...props
-}: WarningsProps): React.ReactElement | null => {
-  const classes = useStyles();
-  const theme = useTheme();
-
-  const variant = theme.palette.type === 'dark' ? 'outlined' : 'standard';
-
-  return (
-    <>
-      {warnings.map((warning) => (
-        <Alert
-          key={warning}
-          className={classes.warning}
-          severity="warning"
-          variant={variant}
-          {...props}
-        >
-          {warning}
-        </Alert>
-      ))}
-    </>
-  );
-};
+}: WarningsProps): React.ReactElement | null => (
+  <>
+    {warnings.map((warning) => (
+      <Warning key={warning} {...props}>
+        {warning}
+      </Warning>
+    ))}
+  </>
+);

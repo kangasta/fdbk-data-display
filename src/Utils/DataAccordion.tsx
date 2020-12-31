@@ -8,10 +8,14 @@ import {
   AccordionSummary,
   AccordionSummaryProps,
   Hidden,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { ExpandMore } from '@material-ui/icons';
+
+import { Unit } from '../Types/Topic';
+import { capitalize } from './Page';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,13 +28,16 @@ const useStyles = makeStyles((theme: Theme) =>
     primary: {
       flexBasis: '35%',
       flexShrink: 0,
+      [theme.breakpoints.down('sm')]: {
+        flexGrow: 1,
+      },
     },
     secondary: {
       color: theme.palette.text.secondary,
       minWidth: 250,
     },
     detail: {
-      marginTop: theme.spacing(3),
+      margin: theme.spacing(2, 0),
     },
   })
 );
@@ -64,9 +71,11 @@ export const DataAccordion = ({
       >
         <Typography className={classes.primary}>{primaryTitle}</Typography>
         <Hidden smDown>
-          <Typography className={classes.secondary}>
-            {secondaryTitle}
-          </Typography>
+          <Tooltip title={secondaryLabel} placement="left">
+            <Typography className={classes.secondary}>
+              {secondaryTitle}
+            </Typography>
+          </Tooltip>
         </Hidden>
       </AccordionSummary>
       <AccordionDetails className={classes.content}>
@@ -99,3 +108,40 @@ export const Detail = ({ title, children }: DetailProps) => {
     </div>
   );
 };
+
+interface DataDetailContentProps {
+  value: unknown;
+  unit?: string;
+}
+
+const DataDetailContent = ({
+  value,
+  unit,
+}: DataDetailContentProps): React.ReactElement => {
+  return (
+    <>
+      {String(value)} {unit && String(unit)}
+    </>
+  );
+};
+
+export interface DataDetailsProps {
+  values: { [key: string]: unknown };
+  units?: Unit[];
+}
+
+export const DataDetails = ({
+  values,
+  units,
+}: DataDetailsProps): React.ReactElement => (
+  <>
+    {Object.keys(values).map((key) => (
+      <Detail key={key} title={capitalize(key)}>
+        <DataDetailContent
+          value={values[key]}
+          unit={units?.find(({ field }) => field === key)?.unit}
+        />
+      </Detail>
+    ))}
+  </>
+);
