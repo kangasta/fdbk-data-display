@@ -59,7 +59,7 @@ const isLast = (index: number, array: unknown[]): boolean =>
 
 export interface BreadcrumbLink {
   label: string;
-  target: string;
+  target?: string;
   disable?: boolean;
 }
 
@@ -104,7 +104,7 @@ export const ViewWrapper = ({
         {breadcrumbs && (
           <Breadcrumbs>
             {breadcrumbs.map(({ label, target, disable }, i, arr) =>
-              disable || isLast(i, arr) ? (
+              disable || isLast(i, arr) || target === undefined ? (
                 <Typography key={label} color="textPrimary">
                   {label}
                 </Typography>

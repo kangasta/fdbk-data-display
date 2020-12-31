@@ -13,6 +13,40 @@ import { TopicsState } from '../Reducers/topics';
 import { Topic } from '../Types/Topic';
 import { DataAccordion, Detail } from '../Utils/DataAccordion';
 
+export interface TopicDetailsProps {
+  topic: Topic | Omit<Topic, 'name' | 'id'>;
+  id?: string;
+}
+
+export const TopicDetails = ({
+  topic,
+  id,
+}: TopicDetailsProps): React.ReactElement => {
+  const detailFields: (keyof Omit<Topic, 'name' | 'id'>)[] = [
+    'description',
+    'type',
+    'template',
+  ];
+
+  return (
+    <>
+      {id && (
+        <Detail title="ID">
+          <div>{id}</div>
+        </Detail>
+      )}
+      {detailFields.map(
+        (key) =>
+          topic[key] && (
+            <Detail key={key} title={capitalize(key)}>
+              <div>{topic[key]}</div>
+            </Detail>
+          )
+      )}
+    </>
+  );
+};
+
 export interface TopicsProps {
   data: TopicsState['data'];
   status: TopicsState['status'];
@@ -38,12 +72,6 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
     ...(expandedName
       ? [{ target: `/topics/${expanded}`, label: capitalize(expandedName) }]
       : []),
-  ];
-
-  const detailFields: (keyof Omit<Topic, 'name' | 'id'>)[] = [
-    'description',
-    'type',
-    'template',
   ];
 
   return (
@@ -79,14 +107,7 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
               </>
             }
           >
-            {detailFields.map(
-              (key) =>
-                other[key] && (
-                  <Detail key={key} title={capitalize(key)}>
-                    <div>{other[key]}</div>
-                  </Detail>
-                )
-            )}
+            <TopicDetails topic={other} />
           </DataAccordion>
         ))}
       </Page>

@@ -17,6 +17,7 @@ import SideDrawer from './Components/SideDrawer';
 import { View } from './Utils/View';
 import { mainSaga } from './Sagas/main';
 import Topics from './Views/Topics';
+import Data from './Views/Data';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(mainReducer, applyMiddleware(sagaMiddleware));
@@ -38,6 +39,9 @@ export const App = (): React.ReactElement => {
                 </Route>
                 <Route path="/settings">
                   <Settings />
+                </Route>
+                <Route path="/topics/:id/data">
+                  <Data />
                 </Route>
                 <Route path="/topics/:id">
                   <Topics />
