@@ -2,18 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
-import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
-  Hidden,
-  IconButton,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import { ExpandMore, FormatListNumbered } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { FormatListNumbered } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
@@ -21,46 +11,7 @@ import { Page, Title, capitalize } from '../Utils/Page';
 import { ViewWrapper } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { Topic } from '../Types/Topic';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    header: {
-      display: 'flex',
-    },
-    content: {
-      display: 'block',
-    },
-    primary: {
-      flexBasis: '35%',
-      flexShrink: 0,
-    },
-    secondary: {
-      color: theme.palette.text.secondary,
-      minWidth: 250,
-    },
-    detail: {
-      marginTop: theme.spacing(3),
-    },
-  })
-);
-
-export interface DetailProps {
-  title: string;
-  children: React.ReactNode;
-}
-
-export const Detail = ({ title, children }: DetailProps) => {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.detail}>
-      <Typography color="textSecondary" display="block" variant="caption">
-        {title}
-      </Typography>
-      {children}
-    </div>
-  );
-};
+import { DataAccordion, Detail } from '../Utils/DataAccordion';
 
 export interface TopicsProps {
   data: TopicsState['data'];
@@ -68,7 +19,6 @@ export interface TopicsProps {
 }
 
 export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
-  const classes = useStyles();
   const history = useHistory();
   const { id: expanded } = useParams<{ id?: string }>();
 
@@ -106,49 +56,38 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
         <Title>Topics list</Title>
         {data.length ? null : <NoData />}
         {data?.map(({ name, id, ...other }) => (
-          <Accordion
+          <DataAccordion
             key={id}
             expanded={expanded === id}
             onChange={getOnChange(id)}
+            primaryTitle={capitalize(name)}
+            secondaryLabel="ID"
+            secondaryTitle={id}
+            AccordionSummaryProps={{
+              'data-testid': `topics-accordion-summary-${id}`,
+            }}
+            actions={
+              <>
+                <Tooltip title="Show data">
+                  <IconButton
+                    color="primary"
+                    onClick={getOnClick(`/topics/${id}/data`)}
+                  >
+                    <FormatListNumbered />
+                  </IconButton>
+                </Tooltip>
+              </>
+            }
           >
-            <AccordionSummary
-              className={classes.header}
-              expandIcon={<ExpandMore />}
-              data-testid={`topics-accordion-summary-${id}`}
-            >
-              <Typography className={classes.primary}>
-                {capitalize(name)}
-              </Typography>
-              <Hidden smDown>
-                <Typography className={classes.secondary}>{id}</Typography>
-              </Hidden>
-            </AccordionSummary>
-            <AccordionDetails className={classes.content}>
-              <Hidden mdUp>
-                <Detail title="ID">
-                  <div>{id}</div>
-                </Detail>
-              </Hidden>
-              {detailFields.map(
-                (key) =>
-                  other[key] && (
-                    <Detail key={key} title={capitalize(key)}>
-                      <div>{other[key]}</div>
-                    </Detail>
-                  )
-              )}
-            </AccordionDetails>
-            <AccordionActions>
-              <Tooltip title="Show data">
-                <IconButton
-                  color="primary"
-                  onClick={getOnClick(`/topics/${id}/data`)}
-                >
-                  <FormatListNumbered />
-                </IconButton>
-              </Tooltip>
-            </AccordionActions>
-          </Accordion>
+            {detailFields.map(
+              (key) =>
+                other[key] && (
+                  <Detail key={key} title={capitalize(key)}>
+                    <div>{other[key]}</div>
+                  </Detail>
+                )
+            )}
+          </DataAccordion>
         ))}
       </Page>
     </ViewWrapper>
