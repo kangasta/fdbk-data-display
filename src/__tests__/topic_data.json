@@ -1,0 +1,32 @@
+[
+	{
+		"elapsed": 156.97099999999998,
+		"status_code": 200.0,
+		"timestamp": "2021-01-01T14:47:57.698435Z",
+		"topic_id": "9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a"
+	},
+	{
+		"elapsed": 168.22533333333334,
+		"status_code": 200.0,
+		"timestamp": "2021-01-01T14:48:13.927549Z",
+		"topic_id": "9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a"
+	},
+	{
+		"elapsed": 178.6113333333333,
+		"status_code": 200.0,
+		"timestamp": "2021-01-01T14:48:29.990144Z",
+		"topic_id": "9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a"
+	},
+	{
+		"elapsed": 151.0223333333333,
+		"status_code": 200.0,
+		"timestamp": "2021-01-01T14:48:45.917912Z",
+		"topic_id": "9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a"
+	},
+	{
+		"elapsed": 162.63566666666668,
+		"status_code": 200.0,
+		"timestamp": "2021-01-01T14:49:01.974446Z",
+		"topic_id": "9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a"
+	}
+]

@@ -70,6 +70,9 @@ export const Data = ({
             }
             secondaryTitle={timestamp}
             secondaryLabel="Timestamp"
+            AccordionSummaryProps={{
+              'data-testid': `data-accordion-summary-${timestamp}`,
+            }}
           >
             <DataDetails values={values} units={topic?.units} />
           </DataAccordion>
