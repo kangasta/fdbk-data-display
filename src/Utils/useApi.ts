@@ -21,6 +21,8 @@ export type CheckType<DataType = unknown> = (
   data: DataType
 ) => string | null | undefined;
 
+export const checkNoErrorKey = (data: any): string | null => data.error ?? null;
+
 export function useApi<DataType = unknown>(
   path: string,
   checks?: CheckType<DataType>[]
@@ -50,7 +52,7 @@ export function useApi<DataType = unknown>(
         });
         const responseData = await response.json();
 
-        const hasErrors = checks?.some((check) => {
+        const hasErrors = [checkNoErrorKey, ...(checks ?? [])].some((check) => {
           const error = check(responseData);
           if (error) {
             setStatus({ error });
