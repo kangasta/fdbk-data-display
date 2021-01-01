@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { IconButton, Tooltip } from '@material-ui/core';
-import { FormatListNumbered } from '@material-ui/icons';
+import { FormatListNumbered, PieChart } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
@@ -12,15 +12,20 @@ import { ViewWrapper } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { Topic } from '../Types/Topic';
 import { DataAccordion, Detail } from '../Utils/DataAccordion';
+import { Warning } from '../Utils/Warnings';
 
 export interface TopicDetailsProps {
-  topic: Topic | Omit<Topic, 'name' | 'id'>;
+  topic?: Topic | Omit<Topic, 'name' | 'id'>;
   id?: string;
+  name?: string;
+  error?: string;
 }
 
 export const TopicDetails = ({
   topic,
   id,
+  name,
+  error,
 }: TopicDetailsProps): React.ReactElement => {
   const detailFields: (keyof Omit<Topic, 'name' | 'id'>)[] = [
     'description',
@@ -30,19 +35,22 @@ export const TopicDetails = ({
 
   return (
     <>
+      {name && <Title>{name}</Title>}
+      {error && <Warning severity="error">{error}</Warning>}
       {id && (
         <Detail title="ID">
           <div>{id}</div>
         </Detail>
       )}
-      {detailFields.map(
-        (key) =>
-          topic[key] && (
-            <Detail key={key} title={capitalize(key)}>
-              <div>{topic[key]}</div>
-            </Detail>
-          )
-      )}
+      {topic &&
+        detailFields.map(
+          (key) =>
+            topic[key] && (
+              <Detail key={key} title={capitalize(key)}>
+                <div>{topic[key]}</div>
+              </Detail>
+            )
+        )}
     </>
   );
 };
@@ -96,6 +104,14 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
             }}
             actions={
               <>
+                <Tooltip title="Show summary">
+                  <IconButton
+                    color="primary"
+                    onClick={getOnClick(`/topics/${id}/summary`)}
+                  >
+                    <PieChart />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Show data">
                   <IconButton
                     color="primary"

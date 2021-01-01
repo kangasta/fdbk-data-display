@@ -7,4 +7,4 @@ RUN apt-get update && \
     npm ci
 
 ENTRYPOINT ["./node_modules/.bin/cypress", "run"]
-CMD ["--browser", "chromium"]
+CMD ["--browser", "chromium", "--headless"]

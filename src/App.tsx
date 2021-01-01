@@ -43,6 +43,9 @@ export const App = (): React.ReactElement => {
                 <Route path="/topics/:id/data">
                   <Data />
                 </Route>
+                <Route path="/topics/:id/summary">
+                  <Statistics />
+                </Route>
                 <Route path="/topics/:id">
                   <Topics />
                 </Route>

@@ -9,7 +9,7 @@ import { App } from '../App';
 const TEST_API_URL = 'http://api_test_url/';
 const TEST_TOPIC_NAME = 'Google';
 const TEST_TOPIC_ID = '9fb87c42-6d2b-4932-bb1a-088fdd4e9c1a';
-const TEST_DATA_URL = `${TEST_API_URL}topics/${TEST_TOPIC_ID}/data`;
+const TEST_TOPIC_URL = `${TEST_API_URL}topics/${TEST_TOPIC_ID}`;
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TOPICS_JSON = require('./topics.json');
@@ -32,8 +32,10 @@ const getInvalidResponse = () =>
 const getFetchResponse = (url: any) => {
   if (url === `${TEST_API_URL}topics`) {
     return getResponse(TOPICS_JSON);
-  } else if ((url as string).startsWith(TEST_DATA_URL)) {
+  } else if ((url as string).startsWith(`${TEST_TOPIC_URL}/data`)) {
     return getResponse(TOPIC_DATA_JSON);
+  } else if ((url as string).startsWith(`${TEST_TOPIC_URL}/summary`)) {
+    return getResponse({ statistics: [], warnings: [] });
   }
 
   return getResponse(UNKNOWN_DATA_JSON, 404);
@@ -192,28 +194,37 @@ it('displays error message if trying to get data of unknown topic', async (): Pr
   expect(errorContainer.textContent).toContain(UNKNOWN_DATA_JSON.error);
 });
 
-it('displays topic data if fullApi setting is enabled', async (): Promise<void> => {
-  const fetchSpy = jest
-    .spyOn(window, 'fetch')
-    .mockImplementation(getFetchResponse);
+it.each([['data'], ['summary']])(
+  'displays topic %s if fullApi setting is enabled',
+  async (view: string): Promise<void> => {
+    const fetchSpy = jest
+      .spyOn(window, 'fetch')
+      .mockImplementation(getFetchResponse);
 
-  window.history.pushState(null, 'title', `http://localhost/`);
-  const { findByTestId, findAllByTitle } = render(<App />);
+    window.history.pushState(null, 'title', `http://localhost/`);
+    const { findByTestId, findByText, findAllByTitle } = render(<App />);
 
-  await openTopicsView();
+    await openTopicsView();
 
-  const dataLink = await findAllByTitle('Show data');
-  await fireEvent.click(dataLink[1]);
+    const dataLink = await findAllByTitle(`Show ${view}`);
+    await fireEvent.click(dataLink[1]);
 
-  const { elapsed, timestamp } = TOPIC_DATA_JSON[0];
-  const dataAccordion = await findByTestId(
-    `data-accordion-summary-${timestamp}`
-  );
-  await fireEvent.click(dataAccordion);
-  expect(dataAccordion.parentElement?.textContent).toContain(`${elapsed} ms`);
+    if (view === 'data') {
+      const { elapsed, timestamp } = TOPIC_DATA_JSON[0];
+      const dataAccordion = await findByTestId(
+        `data-accordion-summary-${timestamp}`
+      );
+      await fireEvent.click(dataAccordion);
+      expect(dataAccordion.parentElement?.textContent).toContain(
+        `${elapsed} ms`
+      );
+    } else {
+      await findByText('No data available');
+    }
 
-  expect(fetchSpy).toHaveBeenCalledWith(
-    expect.stringContaining(TEST_DATA_URL),
-    expect.anything()
-  );
-});
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining(`${TEST_TOPIC_URL}/${view}`),
+      expect.anything()
+    );
+  }
+);
