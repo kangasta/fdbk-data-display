@@ -1,10 +1,10 @@
 version: "3.4"
 services:
-  app:
+  app.local:
     build: .
   test:
     build:
       context: .
       dockerfile: cypress.Dockerfile
     environment:
-      CYPRESS_TARGET: http://app
+      CYPRESS_TARGET: http://app.local

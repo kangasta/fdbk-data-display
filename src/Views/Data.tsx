@@ -6,13 +6,13 @@ import { DateTime } from 'luxon';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
-import { Page, Title, capitalize } from '../Utils/Page';
+import { Page, capitalize } from '../Utils/Page';
 import { ViewWrapper, BreadcrumbLink } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { DataAccordion, DataDetails } from '../Utils/DataAccordion';
 import { useApi } from '../Utils/useApi';
-import { Warning } from '../Utils/Warnings';
 import { TopicDetails } from './Topics';
+import { StatisticContainer } from '../Utils/StatisticContainer';
 
 export interface DataType {
   topic_id: string;
@@ -53,30 +53,34 @@ export const Data = ({
       breadcrumbs={breadcrumbs}
     >
       <Page>
-        <Title>{topicName}</Title>
-        {topicsStatus.error && (
-          <Warning severity="error">{topicsStatus.error}</Warning>
-        )}
-        {topic && <TopicDetails topic={topic} id={topicId} />}
-        <Title>Data</Title>
-        {newestFirst.length ? null : <NoData />}
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {newestFirst.map(({ timestamp, topic_id, ...values }) => (
-          <DataAccordion
-            key={timestamp}
-            primaryTitle={
-              DateTime.fromISO(timestamp).setLocale('en').toRelative() ??
-              timestamp
-            }
-            secondaryTitle={timestamp}
-            secondaryLabel="Timestamp"
-            AccordionSummaryProps={{
-              'data-testid': `data-accordion-summary-${timestamp}`,
-            }}
-          >
-            <DataDetails values={values} units={topic?.units} />
-          </DataAccordion>
-        ))}
+        <StatisticContainer>
+          <TopicDetails
+            name={topicName}
+            topic={topic}
+            id={topicId}
+            error={topicsStatus.error}
+          />
+        </StatisticContainer>
+        <StatisticContainer title="Data">
+          {newestFirst.length ? null : <NoData />}
+          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+          {newestFirst.map(({ timestamp, topic_id, ...values }) => (
+            <DataAccordion
+              key={timestamp}
+              primaryTitle={
+                DateTime.fromISO(timestamp).setLocale('en').toRelative() ??
+                timestamp
+              }
+              secondaryTitle={timestamp}
+              secondaryLabel="Timestamp"
+              AccordionSummaryProps={{
+                'data-testid': `data-accordion-summary-${timestamp}`,
+              }}
+            >
+              <DataDetails values={values} units={topic?.units} />
+            </DataAccordion>
+          ))}
+        </StatisticContainer>
       </Page>
     </ViewWrapper>
   );
