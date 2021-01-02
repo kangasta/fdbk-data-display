@@ -16,6 +16,7 @@ import { ExpandMore } from '@material-ui/icons';
 
 import { Unit } from '../Types/Topic';
 import { capitalize } from './Page';
+import { DataDetailContent } from './DataPresentation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -106,22 +107,6 @@ export const Detail = ({ title, children }: DetailProps) => {
       </Typography>
       {children}
     </div>
-  );
-};
-
-interface DataDetailContentProps {
-  value: unknown;
-  unit?: string;
-}
-
-const DataDetailContent = ({
-  value,
-  unit,
-}: DataDetailContentProps): React.ReactElement => {
-  return (
-    <>
-      {String(value)} {unit && String(unit)}
-    </>
   );
 };
 
