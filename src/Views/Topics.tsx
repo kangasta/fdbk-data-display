@@ -13,6 +13,7 @@ import { TopicsState } from '../Reducers/topics';
 import { Topic } from '../Types/Topic';
 import { DataAccordion, Detail } from '../Utils/DataAccordion';
 import { Warning } from '../Utils/Warnings';
+import { useTitle } from '../Utils/useTitle';
 
 export interface TopicDetailsProps {
   topic?: Topic | Omit<Topic, 'name' | 'id'>;
@@ -64,6 +65,9 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
   const history = useHistory();
   const { id: expanded } = useParams<{ id?: string }>();
 
+  const expandedName = data.find(({ id }) => expanded === id)?.name;
+  useTitle(expandedName ? `topic ${capitalize(expandedName)}` : 'topics');
+
   const getOnChange = (id: string) => () =>
     expanded === id
       ? history.replace('/topics')
@@ -71,8 +75,6 @@ export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
   const getOnClick = (target: string) => () => {
     history.push(target);
   };
-
-  const expandedName = data.find(({ id }) => expanded === id)?.name;
 
   const breadcrumbs = [
     { target: '/', label: 'Home' },

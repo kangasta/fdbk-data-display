@@ -19,6 +19,7 @@ import { ViewWrapper } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { TopicDetails } from './Topics';
 import { StatisticContainer } from '../Utils/StatisticContainer';
+import { useTitle } from '../Utils/useTitle';
 
 export type StatisticsType = any[];
 
@@ -68,6 +69,10 @@ export const Statistics = ({
       : basePath;
   }, [topicId, showQueryBar, query, aggregateTo, limit]);
 
+  const topic = topicsData.find(({ id }) => topicId === id);
+  const topicName = topic ? capitalize(topic.name) : topicId;
+  useTitle(topicId ? `summary for ${topicName}` : 'overview');
+
   const [data, status] = useApi(path, statisticsChecks);
   const statistics: StatisticsType = data?.statistics ?? [];
   const warnings: string[] = data?.warnings ?? [];
@@ -76,8 +81,6 @@ export const Statistics = ({
     .filter((i) => Object.keys(statisticMap).includes(i.type))
     .map((i) => statisticMap[i.type as statisticsType](i));
 
-  const topic = topicsData.find(({ id }) => topicId === id);
-  const topicName = topic ? capitalize(topic.name) : topicId;
   const breadcrumbs = [
     { target: '/', label: 'Home', disable: !topicId },
     ...(topicName

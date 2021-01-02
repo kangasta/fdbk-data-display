@@ -13,6 +13,7 @@ import { DataAccordion, DataDetails } from '../Utils/DataAccordion';
 import { useApi } from '../Utils/useApi';
 import { TopicDetails } from './Topics';
 import { StatisticContainer } from '../Utils/StatisticContainer';
+import { useTitle } from '../Utils/useTitle';
 
 export interface DataType {
   topic_id: string;
@@ -35,8 +36,9 @@ export const Data = ({
   const [data, status] = useApi<DataType[]>(path);
 
   const topic = topicsData.find(({ id }) => topicId === id);
-
   const topicName = topic ? capitalize(topic.name) : topicId;
+  useTitle(`data for ${topicName}`);
+
   const breadcrumbs: BreadcrumbLink[] = [
     { target: '/', label: 'Home' },
     { target: '/topics', label: 'Topics' },
