@@ -29,6 +29,7 @@ import {
 } from '../Utils/SetterField';
 import { QueryObject } from '../Utils/queryUtils';
 import { ViewWrapper } from '../Utils/View';
+import { useTitle } from '../Utils/useTitle';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -138,6 +139,7 @@ export const Settings = ({
   const classes = useStyles();
   const history = useHistory();
   const [message, setMessage] = useState<MessageType>(undefined);
+  useTitle('settings');
   const clearMessage = () => setMessage(undefined);
 
   useEffect(() => {
