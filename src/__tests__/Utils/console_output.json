@@ -1,0 +1,27 @@
+[
+	{
+		"stream": "stdin",
+		"text": "python -u process_simulator.py",
+		"timestamp": "2021-01-02T14:12:10.999074Z"
+	},
+	{
+		"stream": "stdout",
+		"text": "Starting the process",
+		"timestamp": "2021-01-02T14:12:11.057292Z"
+	},
+	{
+		"stream": "stderr",
+		"text": "Long error (2):",
+		"timestamp": "2021-01-02T14:12:12.475383Z"
+	},
+	{
+		"stream": "stderr",
+		"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sed ullamcorper tortor. Vestibulum convallis nibh nec eros aliquet sodales. Maecenas pellentesque interdum turpis quis mattis. Ut semper aliquet erat, ac fringilla mauris iaculis iaculis. Phasellus sed felis purus. Aenean porta nunc ligula, vitae egestas ligula rhoncus at. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed lobortis finibus aliquet.",
+		"timestamp": "2021-01-02T14:12:12.475443Z"
+	},
+	{
+		"stream": "stdout",
+		"text": "Process completed",
+		"timestamp": "2021-01-02T14:12:14.593788Z"
+	}
+]
