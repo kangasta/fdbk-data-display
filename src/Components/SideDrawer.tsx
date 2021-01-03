@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -18,7 +18,10 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { PieChart, List as ListIcon, Close } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
-import { setShowSideDrawer } from '../Utils/actionCreators';
+import {
+  setShowSideDrawer,
+  triggerUpdateTopics,
+} from '../Utils/actionCreators';
 import { TopicsState } from '../Reducers/topics';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,7 +79,8 @@ export interface SideDrawerProps {
   showSideDrawer: boolean;
   title: string;
   topics: TopicsState;
-  setShowSideDrawer: (showSideDrawer: boolean) => void;
+  setShowSideDrawer: typeof setShowSideDrawer;
+  triggerUpdateTopics: typeof triggerUpdateTopics;
 }
 
 export const SideDrawer = ({
@@ -84,9 +88,17 @@ export const SideDrawer = ({
   title,
   topics,
   setShowSideDrawer,
+  triggerUpdateTopics,
 }: SideDrawerProps) => {
   const classes = useStyles();
   const history = useHistory();
+
+  // Update topics data
+  useEffect(() => {
+    if (showSideDrawer) {
+      triggerUpdateTopics();
+    }
+  }, [showSideDrawer, triggerUpdateTopics]);
 
   const onClose = () => setShowSideDrawer(false);
   const getOnClick = (target: string) => () => {
@@ -145,6 +157,6 @@ const mapStateToProps = ({ settings, topics, ui }: StateType) => ({
   topics: topics,
 });
 const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ setShowSideDrawer }, dispatch);
+  bindActionCreators({ setShowSideDrawer, triggerUpdateTopics }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);
