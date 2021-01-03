@@ -57,6 +57,11 @@ const getCommonChartOptions = (
     },
     multiKeyBackground: 'transparent',
   },
+  elements: {
+    arc: {
+      borderColor: theme.palette.background.paper,
+    },
+  },
 });
 
 const getGridStyling = (theme: Theme): ChartScales => ({
