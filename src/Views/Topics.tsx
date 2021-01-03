@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -14,6 +15,7 @@ import { Topic } from '../Types/Topic';
 import { DataAccordion, Detail } from '../Utils/DataAccordion';
 import { Warning } from '../Utils/Warnings';
 import { useTitle } from '../Utils/useTitle';
+import { triggerUpdateTopics } from '../Utils/actionCreators';
 
 export interface TopicDetailsProps {
   topic?: Topic | Omit<Topic, 'name' | 'id'>;
@@ -59,14 +61,24 @@ export const TopicDetails = ({
 export interface TopicsProps {
   data: TopicsState['data'];
   status: TopicsState['status'];
+  triggerUpdateTopics: typeof triggerUpdateTopics;
 }
 
-export const Topics = ({ data, status }: TopicsProps): React.ReactElement => {
+export const Topics = ({
+  data,
+  status,
+  triggerUpdateTopics,
+}: TopicsProps): React.ReactElement => {
   const history = useHistory();
   const { id: expanded } = useParams<{ id?: string }>();
 
   const expandedName = data.find(({ id }) => expanded === id)?.name;
   useTitle(expandedName ? `topic ${capitalize(expandedName)}` : 'topics');
+
+  // Update topics data
+  useEffect(() => {
+    triggerUpdateTopics();
+  }, [triggerUpdateTopics]);
 
   const getOnChange = (id: string) => () =>
     expanded === id
@@ -137,5 +149,7 @@ const mapStateToProps = ({ topics }: StateType) => ({
   data: topics.data,
   status: topics.status,
 });
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators({ triggerUpdateTopics }, dispatch);
 
-export default connect(mapStateToProps)(Topics);
+export default connect(mapStateToProps, mapDispatchToProps)(Topics);
