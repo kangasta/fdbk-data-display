@@ -33,7 +33,7 @@ export const Data = ({
   const { id: topicId } = useParams<{ id: string }>();
 
   const path = useMemo(() => `/topics/${topicId}/data?limit=100`, [topicId]);
-  const [data, status] = useApi<DataType[]>(path);
+  const [data, status, updateTrigger] = useApi<DataType[]>(path);
 
   const topic = topicsData.find(({ id }) => topicId === id);
   const topicName = topic ? capitalize(topic.name) : topicId;
@@ -53,6 +53,7 @@ export const Data = ({
       status={status}
       hasData={Boolean(data?.length)}
       breadcrumbs={breadcrumbs}
+      updateTrigger={updateTrigger}
     >
       <Page>
         <StatisticContainer>

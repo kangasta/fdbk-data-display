@@ -101,6 +101,7 @@ export const Topics = ({
       status={status}
       hasData={Boolean(data.length)}
       breadcrumbs={breadcrumbs}
+      updateTrigger={triggerUpdateTopics}
     >
       <Page>
         <Title>Topics list</Title>
