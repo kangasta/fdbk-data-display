@@ -133,7 +133,7 @@ export const ViewWrapper = ({
         {status?.loading && hasData && (
           <CircularProgress color="primary" size={24} thickness={4.8} />
         )}
-        {!status?.loading && hasData && updateTrigger && (
+        {!status?.loading && updateTrigger && (
           <Tooltip title="Update data">
             <IconButton
               className={classes.updateTrigger}
