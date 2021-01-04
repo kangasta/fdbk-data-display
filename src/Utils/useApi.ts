@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { StateType } from '../Reducers/main';
@@ -27,7 +27,7 @@ export const checkNoErrorKey = (data: any): string | null => data.error ?? null;
 export function useApi<DataType = unknown>(
   path: string,
   checks?: CheckType<DataType>[]
-): [DataType | undefined, StatusType] {
+): [DataType | undefined, StatusType, () => void] {
   const [data, setData] = useState<DataType>();
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
   const updateStatus = (newStatus: StatusType) =>
@@ -39,43 +39,44 @@ export function useApi<DataType = unknown>(
     ({ settings }) => settings.apiUrl
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!apiUrl) {
-        updateStatus({ error: API_NOT_CONFIGURED });
+  const fetchData = useCallback(async () => {
+    if (!apiUrl) {
+      updateStatus({ error: API_NOT_CONFIGURED });
+      return;
+    }
+
+    try {
+      updateStatus(LOADING_STATUS);
+      const url = joinPaths(apiUrl, path);
+      const response = await fetch(url, {
+        headers,
+        mode: 'cors',
+      });
+      const responseData = await response.json();
+
+      const hasErrors = [checkNoErrorKey, ...(checks ?? [])].some((check) => {
+        const error = check(responseData);
+        if (error) {
+          updateStatus({ error });
+        }
+        return error;
+      });
+
+      if (hasErrors) {
         return;
       }
 
-      try {
-        updateStatus(LOADING_STATUS);
-        const url = joinPaths(apiUrl, path);
-        const response = await fetch(url, {
-          headers,
-          mode: 'cors',
-        });
-        const responseData = await response.json();
-
-        const hasErrors = [checkNoErrorKey, ...(checks ?? [])].some((check) => {
-          const error = check(responseData);
-          if (error) {
-            updateStatus({ error });
-          }
-          return error;
-        });
-
-        if (hasErrors) {
-          return;
-        }
-
-        setData(responseData);
-        setStatus({ lastUpdated: new Date().toISOString() });
-      } catch (_) {
-        updateStatus({ error: API_FETCH_FAILED });
-        dispatch(clearAuthentication());
-      }
-    };
-    fetchData();
+      setData(responseData);
+      setStatus({ lastUpdated: new Date().toISOString() });
+    } catch (_) {
+      updateStatus({ error: API_FETCH_FAILED });
+      dispatch(clearAuthentication());
+    }
   }, [apiUrl, path, headers, checks, dispatch]);
 
-  return useMemo(() => [data, status], [data, status]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return useMemo(() => [data, status, fetchData], [data, status, fetchData]);
 }

@@ -73,7 +73,7 @@ export const Statistics = ({
   const topicName = topic ? capitalize(topic.name) : topicId;
   useTitle(topicId ? `summary for ${topicName}` : 'overview');
 
-  const [data, status] = useApi(path, statisticsChecks);
+  const [data, status, updateTrigger] = useApi(path, statisticsChecks);
   const statistics: StatisticsType = data?.statistics ?? [];
   const warnings: string[] = data?.warnings ?? [];
 
@@ -97,6 +97,7 @@ export const Statistics = ({
       status={status}
       hasData={Boolean(statistics.length)}
       breadcrumbs={breadcrumbs}
+      updateTrigger={updateTrigger}
     >
       {showQueryBar && <QueryBar />}
       <Page>

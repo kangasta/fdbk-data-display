@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import {
+  Backdrop,
+  Breadcrumbs,
+  CircularProgress,
+  IconButton,
+  Link,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import { Update } from '@material-ui/icons';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
 
 import { Error } from '../Utils/IconMessage';
 import { API_NOT_CONFIGURED, StatusType } from './useApi';
@@ -24,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
     },
     footer: {},
-    breadcrumbs: {
+    breadcrumbsHeader: {
+      display: 'flex',
       marginBottom: theme.spacing(2),
       minHeight: 24,
       [theme.breakpoints.down('xs')]: {
@@ -32,8 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingRight: theme.spacing(2),
       },
     },
-    backgroundLoading: {
-      float: 'right',
+    breadcrumbs: {
+      flex: 1,
+    },
+    updateTrigger: {
+      margin: theme.spacing(-1.5),
+      padding: theme.spacing(1.5),
     },
   })
 );
@@ -68,6 +78,7 @@ export interface ViewWrapperProps {
   status?: StatusType;
   hasData?: boolean;
   breadcrumbs?: BreadcrumbLink[];
+  updateTrigger?: () => void;
 }
 
 export const ViewWrapper = ({
@@ -75,6 +86,7 @@ export const ViewWrapper = ({
   status,
   hasData,
   breadcrumbs,
+  updateTrigger,
 }: ViewWrapperProps): React.ReactElement => {
   const classes = useStyles();
 
@@ -95,14 +107,9 @@ export const ViewWrapper = ({
 
   return (
     <>
-      <PageContainer className={classes.breadcrumbs}>
-        {status?.loading && hasData && (
-          <div className={classes.backgroundLoading}>
-            <CircularProgress color="primary" size={24} thickness={4.8} />
-          </div>
-        )}
-        {breadcrumbs && (
-          <Breadcrumbs>
+      <PageContainer className={classes.breadcrumbsHeader}>
+        {breadcrumbs ? (
+          <Breadcrumbs className={classes.breadcrumbs}>
             {breadcrumbs.map(({ label, target, disable }, i, arr) =>
               disable || isLast(i, arr) || target === undefined ? (
                 <Typography key={label} color="textPrimary">
@@ -120,6 +127,21 @@ export const ViewWrapper = ({
               )
             )}
           </Breadcrumbs>
+        ) : (
+          <div className={classes.breadcrumbs} />
+        )}
+        {status?.loading && hasData && (
+          <CircularProgress color="primary" size={24} thickness={4.8} />
+        )}
+        {!status?.loading && hasData && updateTrigger && (
+          <Tooltip title="Update data">
+            <IconButton
+              className={classes.updateTrigger}
+              onClick={updateTrigger}
+            >
+              <Update />
+            </IconButton>
+          </Tooltip>
         )}
       </PageContainer>
       {content}
