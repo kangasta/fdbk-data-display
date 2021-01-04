@@ -15,6 +15,7 @@ export const LOADING_STATUS = {
 export interface StatusType {
   error?: string;
   loading?: string;
+  lastUpdated?: string;
 }
 
 export type CheckType<DataType = unknown> = (
@@ -29,6 +30,8 @@ export function useApi<DataType = unknown>(
 ): [DataType | undefined, StatusType] {
   const [data, setData] = useState<DataType>();
   const [status, setStatus] = useState<StatusType>(LOADING_STATUS);
+  const updateStatus = (newStatus: StatusType) =>
+    setStatus(({ lastUpdated }) => ({ lastUpdated, ...newStatus }));
   const headers = useAuthorizationHeader();
 
   const dispatch = useDispatch();
@@ -39,12 +42,12 @@ export function useApi<DataType = unknown>(
   useEffect(() => {
     const fetchData = async () => {
       if (!apiUrl) {
-        setStatus({ error: API_NOT_CONFIGURED });
+        updateStatus({ error: API_NOT_CONFIGURED });
         return;
       }
 
       try {
-        setStatus(LOADING_STATUS);
+        updateStatus(LOADING_STATUS);
         const url = joinPaths(apiUrl, path);
         const response = await fetch(url, {
           headers,
@@ -55,7 +58,7 @@ export function useApi<DataType = unknown>(
         const hasErrors = [checkNoErrorKey, ...(checks ?? [])].some((check) => {
           const error = check(responseData);
           if (error) {
-            setStatus({ error });
+            updateStatus({ error });
           }
           return error;
         });
@@ -65,9 +68,9 @@ export function useApi<DataType = unknown>(
         }
 
         setData(responseData);
-        setStatus({});
+        setStatus({ lastUpdated: new Date().toISOString() });
       } catch (_) {
-        setStatus({ error: API_FETCH_FAILED });
+        updateStatus({ error: API_FETCH_FAILED });
         dispatch(clearAuthentication());
       }
     };

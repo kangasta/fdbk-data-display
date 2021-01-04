@@ -8,7 +8,7 @@ import ListContainer, { getListKey } from '../Components/ListContainer';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
-import { capitalize, Page } from '../Utils/Page';
+import { capitalize, LastUpdated, Page } from '../Utils/Page';
 import QueryBar from '../Components/QueryBar';
 import { QueryState } from '../Reducers/query';
 import { withQueryString } from '../Utils/queryUtils';
@@ -113,6 +113,7 @@ export const Statistics = ({
         )}
         {statistics.length ? null : <NoData />}
         {statisticContainers}
+        <LastUpdated on={status.lastUpdated} />
       </Page>
     </ViewWrapper>
   );

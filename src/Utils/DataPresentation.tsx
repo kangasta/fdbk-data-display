@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { DateTime } from 'luxon';
 
@@ -66,14 +66,24 @@ const Console = ({ value }: DataContentProps): React.ReactElement => {
   return <div className={classes.console}>{String(value)}</div>;
 };
 
-const Timestamp = ({ value }: DataContentProps): React.ReactElement => {
+const asRelative = (timestamp: unknown) =>
+  DateTime.fromISO(String(timestamp)).setLocale('en').toRelative();
+
+export const Timestamp = ({ value }: DataContentProps): React.ReactElement => {
   const classes = useStyles();
+  const [relative, setRelative] = useState<string | null>(asRelative(value));
+
+  useEffect(() => {
+    const interval = setInterval(() => setRelative(asRelative(value)), 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [value]);
 
   return (
     <Tooltip title={String(value)} placement="right">
-      <span className={classes.timestamp}>
-        {DateTime.fromISO(String(value)).setLocale('en').toRelative()}
-      </span>
+      <span className={classes.timestamp}>{relative}</span>
     </Tooltip>
   );
 };

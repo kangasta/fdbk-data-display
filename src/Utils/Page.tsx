@@ -8,7 +8,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+
 import { getDownQuery } from './ThemeWrapper';
+import { Timestamp } from './DataPresentation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(3),
+    },
+    lastUpdated: {
+      color: theme.palette.text.secondary,
+      marginTop: theme.spacing(6),
+      textAlign: 'right',
     },
   })
 );
@@ -94,5 +101,23 @@ export const Title = ({
     <Typography className={classes.title} variant="h5" component="h2">
       {capitalizeTitle ? capitalize(children) : children}
     </Typography>
+  );
+};
+
+export interface LastUpdatedProps {
+  on?: Date | string;
+}
+
+export const LastUpdated = ({ on }: LastUpdatedProps): React.ReactElement => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.lastUpdated}>
+      {on && (
+        <>
+          Last updated <Timestamp value={on} />
+        </>
+      )}
+    </div>
   );
 };

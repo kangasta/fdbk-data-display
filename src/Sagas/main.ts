@@ -41,7 +41,7 @@ export function* fetchTopics(): any {
       headers,
     });
     const topics = yield call([response, 'json']);
-    yield put(updateTopics(topics, {}));
+    yield put(updateTopics(topics, { lastUpdated: new Date().toISOString() }));
   } catch (_) {
     yield put(updateTopics(undefined, { error: API_FETCH_FAILED }));
     yield put(clearAuthentication());
