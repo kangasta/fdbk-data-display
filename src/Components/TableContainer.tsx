@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
 
 import { StatisticContainer } from '../Utils/StatisticContainer';
 import { capitalize } from '../Utils/Page';
@@ -52,6 +53,10 @@ const getTableRow = (
   );
 };
 
+const TableContainerDiv = styled('div')({
+  overflow: 'auto',
+});
+
 export interface TableContainerProps {
   name: string;
   data: TablePayload['data'];
@@ -66,18 +71,20 @@ export const TableContainer = ({
   singleCellValues,
 }: TableContainerProps): React.ReactElement => (
   <StatisticContainer title={name}>
-    <Table>
-      <TableHead>
-        <TableRow>
-          {getTableTitles(data[0], singleCellValues).map((i) => (
-            <TableCell key={i}>{capitalize(i)}</TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((i) => getTableRow(i, decimals, singleCellValues))}
-      </TableBody>
-    </Table>
+    <TableContainerDiv>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {getTableTitles(data[0], singleCellValues).map((i) => (
+              <TableCell key={i}>{capitalize(i)}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((i) => getTableRow(i, decimals, singleCellValues))}
+        </TableBody>
+      </Table>
+    </TableContainerDiv>
   </StatisticContainer>
 );
 
