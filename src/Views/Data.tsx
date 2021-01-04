@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
-import { Page, capitalize } from '../Utils/Page';
+import { Page, capitalize, LastUpdated } from '../Utils/Page';
 import { ViewWrapper, BreadcrumbLink } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { DataAccordion, DataDetails } from '../Utils/DataAccordion';
@@ -83,6 +83,7 @@ export const Data = ({
             </DataAccordion>
           ))}
         </StatisticContainer>
+        <LastUpdated on={status.lastUpdated} />
       </Page>
     </ViewWrapper>
   );

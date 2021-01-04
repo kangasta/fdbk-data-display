@@ -8,7 +8,7 @@ import { FormatListNumbered, PieChart } from '@material-ui/icons';
 
 import { StateType } from '../Reducers/main';
 import { NoData } from '../Utils/IconMessage';
-import { Page, Title, capitalize } from '../Utils/Page';
+import { Page, Title, capitalize, LastUpdated } from '../Utils/Page';
 import { ViewWrapper } from '../Utils/View';
 import { TopicsState } from '../Reducers/topics';
 import { Topic } from '../Types/Topic';
@@ -140,6 +140,7 @@ export const Topics = ({
             <TopicDetails topic={other} />
           </DataAccordion>
         ))}
+        <LastUpdated on={status.lastUpdated} />
       </Page>
     </ViewWrapper>
   );

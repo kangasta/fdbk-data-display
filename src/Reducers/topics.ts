@@ -29,7 +29,9 @@ export const topicsReducer = (
     case 'UPDATE_TOPICS':
       return {
         data: action.topics.data ?? state.data,
-        status: action.topics.status ?? state.status,
+        status: action.topics.status
+          ? { lastUpdated: state.status.lastUpdated, ...action.topics.status }
+          : state.status,
       };
     case 'TRIGGER_UPDATE_TOPICS':
       return {
