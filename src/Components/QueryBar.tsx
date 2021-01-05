@@ -165,10 +165,10 @@ export const QueryBar = ({
   const setMode = (targetMode: QueryMode) => setQuery({ mode: targetMode });
 
   useEffect(() => {
-    if (downXs) {
+    if (downXs && mode !== 'From now') {
       setQuery({ mode: 'From now' });
     }
-  }, [downXs, setQuery]);
+  }, [downXs, mode, setQuery]);
 
   return (
     <Page data-testid="query-bar">
