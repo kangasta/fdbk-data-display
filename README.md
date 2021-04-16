@@ -1,6 +1,7 @@
 # fdbk-data-display
 
-[![Build Status](https://travis-ci.org/kangasta/fdbk-data-display.svg?branch=master)](https://travis-ci.org/kangasta/fdbk-data-display)
+[![CI](https://github.com/kangasta/fdbk-data-display/actions/workflows/ci.yml/badge.svg)](https://github.com/kangasta/fdbk-data-display/actions/workflows/ci.yml)
+[![Deploy](https://github.com/kangasta/fdbk-data-display/actions/workflows/deploy.yml/badge.svg)](https://github.com/kangasta/fdbk-data-display/actions/workflows/deploy.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/maintainability)](https://codeclimate.com/github/kangasta/fdbk-data-display/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/599a9467889aabe7ccd2/test_coverage)](https://codeclimate.com/github/kangasta/fdbk-data-display/test_coverage)
 
