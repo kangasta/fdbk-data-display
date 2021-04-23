@@ -13,7 +13,7 @@ const settingsState = {
   clientId: 'asd',
 };
 
-it('stores login details on page load and clears them when they expire', async (): Promise<void> => {
+it('stores login details on page load and clears them when they expire', (): void => {
   const store = createStore(mainReducer);
   store.dispatch(setSettings(settingsState));
 
@@ -47,6 +47,6 @@ it('shows error if url does not contain tokens', async (): Promise<void> => {
     </TestWrapper>
   );
 
-  findByTestId('error-container');
+  await findByTestId('error-container');
   expect(container.textContent).toContain('Did not receive credentials');
 });
