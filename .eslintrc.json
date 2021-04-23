@@ -3,7 +3,7 @@
 	"parserOptions": {
 		"project": [
 			"./tsconfig.json",
-			"./cypress/tsconfig.json"
+			"./tst/cypress/tsconfig.json"
 		]
 	},
 	"settings": {

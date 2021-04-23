@@ -1,6 +1,3 @@
-/// <reference types="cypress" />
-/// <reference types="@testing-library/cypress" />
-
 const API_UNREACHABLE = 'Was not able to fetch data from the API.';
 
 const setApiUrl = (save = false) => {
@@ -17,7 +14,7 @@ const setApiUrl = (save = false) => {
 
 context('Settings', (): void => {
   before((): void => {
-    cy.visit(Cypress.env('TARGET') || 'http://localhost:3000');
+    cy.visit('/');
   });
 
   it('allows saving settings to local storage', (): void => {
