@@ -3,8 +3,10 @@ services:
   app.local:
     build: .
   test:
-    build:
-      context: .
-      dockerfile: cypress.Dockerfile
-    environment:
-      CYPRESS_TARGET: http://app.local
+    build: ./tst/
+    command:
+    - --browser
+    - chromium
+    - --headless
+    - --config
+    - baseUrl=http://app.local

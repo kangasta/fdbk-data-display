@@ -1,6 +1,8 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node",
+    "target": "ES2015",
     "noEmit": true,
     "types": [
       "cypress",
